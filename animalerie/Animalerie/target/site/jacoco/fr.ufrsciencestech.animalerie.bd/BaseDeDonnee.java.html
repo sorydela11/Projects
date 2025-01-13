@@ -1,0 +1,861 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BaseDeDonnee.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Animalerie</a> &gt; <a href="index.source.html" class="el_package">fr.ufrsciencestech.animalerie.bd</a> &gt; <span class="el_source">BaseDeDonnee.java</span></div><h1>BaseDeDonnee.java</h1><pre class="source lang-java linenums">/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package fr.ufrsciencestech.animalerie.bd;
+
+import fr.ufrsciencestech.animalerie.Reservation.StatutReservation;
+import fr.ufrsciencestech.animalerie.*;
+import fr.ufrsciencestech.animalerie.Toilettage.TypeDeToilettage;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.sql.*;
+import java.time.LocalDate;
+
+/**
+ *
+ * @author delaton
+ */
+<span class="nc" id="L20">public class BaseDeDonnee {</span>
+    public static Connection c;
+    private static final String BD_url = &quot;jdbc:oracle:thin:@eluard:1521:ENSE2024&quot;;
+    private static final String username = &quot;id657893&quot;;
+    private static final String password = &quot;id657893&quot;;
+    private static final String filePath = &quot;/home/delaton/Prog/GenieLog/Animalerie/animalerie/Base_de_donnee.sql&quot;; 
+    
+    private static Connection connectToBD() throws SQLException
+    {
+<span class="fc" id="L29">        return DriverManager.getConnection(BD_url, username, password);</span>
+    }
+    
+    public static boolean connexionBD()
+    {
+<span class="fc" id="L34">        boolean bol = false;</span>
+        try{
+<span class="fc" id="L36">          BaseDeDonnee.c = BaseDeDonnee.connectToBD();</span>
+<span class="fc" id="L37">          System.out.println(&quot;Connexion réussi&quot;);</span>
+<span class="fc" id="L38">          bol = true;</span>
+        }
+<span class="nc" id="L40">        catch(SQLException e)</span>
+        {
+<span class="nc" id="L42">            System.out.println(&quot;Échec connexion à la base de donnée&quot;);</span>
+            //e.printStackTrace();
+<span class="fc" id="L44">        }</span>
+<span class="fc" id="L45">        return bol;</span>
+    }
+    
+    
+    // Méthode pour exécuter un fichier SQL
+    public static void executeSQLFile() {
+<span class="fc" id="L51">        try (BufferedReader br = new BufferedReader(new FileReader(filePath));</span>
+<span class="fc" id="L52">            Statement statement = c.createStatement()) {</span>
+            
+            String line;
+<span class="fc" id="L55">            StringBuilder sql = new StringBuilder();</span>
+
+            // Lire le fichier ligne par ligne
+<span class="fc bfc" id="L58" title="All 2 branches covered.">            while ((line = br.readLine()) != null) {</span>
+                // Ignorer les commentaires ou lignes vides
+<span class="fc" id="L60">                line = line.trim();</span>
+<span class="pc bpc" id="L61" title="2 of 6 branches missed.">                if (line.isEmpty() || line.startsWith(&quot;--&quot;) || line.startsWith(&quot;#&quot;)) {</span>
+<span class="nc" id="L62">                    continue;</span>
+                }
+
+                // Ajouter la ligne à la commande SQL
+<span class="fc" id="L66">                sql.append(line).append(&quot; &quot;);</span>
+
+                // Exécuter la commande si elle se termine par un point-virgule
+<span class="fc bfc" id="L69" title="All 2 branches covered.">                if (line.endsWith(&quot;;&quot;)) {</span>
+<span class="fc" id="L70">                    String command = sql.toString().replace(&quot;;&quot;, &quot;&quot;).trim(); // Supprimer le point-virgule</span>
+<span class="fc" id="L71">                    statement.execute(command);</span>
+<span class="fc" id="L72">                    sql.setLength(0); // Réinitialiser pour la prochaine commande</span>
+<span class="fc" id="L73">                }</span>
+            }
+
+<span class="fc" id="L76">                System.out.println(&quot;Script SQL exécuté avec succès !&quot;);</span>
+<span class="nc" id="L77">        } catch (IOException | SQLException e) {</span>
+<span class="nc" id="L78">            System.out.println(&quot;Erreur lors de l'exécution du fichier SQL.&quot;);</span>
+            //e.printStackTrace();
+<span class="fc" id="L80">        }</span>
+<span class="fc" id="L81">    }</span>
+    
+    public static boolean userExist(String mail, String passWord)
+    {
+<span class="fc" id="L85">        boolean bol = false;</span>
+        try{
+<span class="fc" id="L87">            String req = &quot;SELECT COUNT(*) AS total FROM CLIENT WHERE mail = ? AND mot_de_passe = ?&quot;;</span>
+<span class="fc" id="L88">            PreparedStatement ppState = c.prepareStatement(req);</span>
+<span class="fc" id="L89">            ppState.setString(1, mail);</span>
+<span class="fc" id="L90">            ppState.setString(2, passWord);</span>
+            
+<span class="fc" id="L92">            ResultSet res = ppState.executeQuery();</span>
+            
+<span class="pc bpc" id="L94" title="1 of 2 branches missed.">            if(res.next())</span>
+            {
+<span class="fc" id="L96">                int count = res.getInt(&quot;total&quot;);</span>
+<span class="fc bfc" id="L97" title="All 2 branches covered.">                if(count &gt; 0)</span>
+                {
+<span class="fc" id="L99">                    bol = true;</span>
+                }
+            }
+            
+<span class="fc" id="L103">            res.close();</span>
+<span class="fc" id="L104">            ppState.close();</span>
+        }
+<span class="nc" id="L106">        catch(SQLException e)</span>
+        {
+            //e.printStackTrace();
+<span class="fc" id="L109">        }</span>
+         
+<span class="fc" id="L111">        return bol;</span>
+    }
+    
+    public static boolean createUser(String nom, String prenom, String mail, String pass)
+    {
+<span class="fc" id="L116">        boolean bol = false;</span>
+        try{
+            
+<span class="fc" id="L119">            String req = &quot;INSERT INTO CLIENT (nom, prenom, mail, mot_de_passe) VALUES (?, ?, ?, ?)&quot;;</span>
+<span class="fc" id="L120">            PreparedStatement ppState = c.prepareStatement(req);</span>
+<span class="fc" id="L121">            ppState.setString(1, nom);</span>
+<span class="fc" id="L122">            ppState.setString(2, prenom);</span>
+<span class="fc" id="L123">            ppState.setString(3, mail);</span>
+<span class="fc" id="L124">            ppState.setString(4, pass);</span>
+            
+<span class="fc" id="L126">            int res = ppState.executeUpdate();</span>
+<span class="fc" id="L127">            System.out.println(&quot;Lignes affectées : &quot; + res);</span>
+            // Si au moins une ligne est affectée, l'insertion a réussi
+<span class="pc bpc" id="L129" title="1 of 2 branches missed.">            if (res &gt; 0) {</span>
+<span class="fc" id="L130">                bol = true;</span>
+            }
+<span class="fc" id="L132">            ppState.close();</span>
+            
+        }
+<span class="fc" id="L135">        catch(SQLException e)</span>
+        {
+            //e.printStackTrace();
+<span class="fc" id="L138">        }</span>
+        
+<span class="fc" id="L140">        return bol;</span>
+    }
+    
+    public static boolean deleteUser(String mail)
+    {
+<span class="fc" id="L145">        boolean bol = false;</span>
+        try{
+            
+<span class="fc" id="L148">            String req = &quot;DELETE FROM CLIENT WHERE mail = ?&quot;;</span>
+<span class="fc" id="L149">            PreparedStatement ppState = c.prepareStatement(req);</span>
+<span class="fc" id="L150">            ppState.setString(1, mail);</span>
+            
+<span class="fc" id="L152">            int res = ppState.executeUpdate();</span>
+            // Si au moins une ligne est affectée, l'insertion a réussi
+<span class="fc bfc" id="L154" title="All 2 branches covered.">            if (res &gt; 0) {</span>
+<span class="fc" id="L155">                bol = true;</span>
+            }
+<span class="fc" id="L157">            ppState.close();</span>
+            
+        }
+<span class="fc" id="L160">        catch(SQLException e)</span>
+        {
+            //e.printStackTrace();
+<span class="fc" id="L163">        }</span>
+        
+<span class="fc" id="L165">        return bol;</span>
+    }
+    
+    public static int getId_client(String mail)
+    {
+<span class="fc" id="L170">        int id = -1;</span>
+        try{
+<span class="fc" id="L172">            String rid = &quot;SELECT id_client FROM CLIENT WHERE mail = ?&quot;;</span>
+<span class="fc" id="L173">            PreparedStatement ppRes = c.prepareStatement(rid);</span>
+<span class="fc" id="L174">            ppRes.setString(1, mail);</span>
+            
+<span class="fc" id="L176">            ResultSet res = ppRes.executeQuery();</span>
+            
+<span class="fc bfc" id="L178" title="All 2 branches covered.">            if(res.next())</span>
+            {
+<span class="fc" id="L180">               id = res.getInt(&quot;id_client&quot;);</span>
+            }
+            
+<span class="fc" id="L183">            res.close();</span>
+<span class="fc" id="L184">            ppRes.close();</span>
+        }
+<span class="nc" id="L186">        catch(SQLException e)</span>
+        {
+            //e.printStackTrace();
+<span class="fc" id="L189">        }</span>
+
+<span class="fc" id="L191">        return id;</span>
+    }
+    
+    public static int getId_service(String nom_s, String duree, String descr, double p, int id_reserv)
+    {
+<span class="nc" id="L196">        int id = -1;</span>
+<span class="nc" id="L197">        String rid = &quot;&quot;;</span>
+<span class="nc" id="L198">        PreparedStatement ppRes = null;</span>
+        try{
+<span class="nc bnc" id="L200" title="All 2 branches missed.">            if(duree == null )</span>
+            {
+<span class="nc" id="L202">               rid = &quot;SELECT id_service FROM SERVICE_P WHERE nom_s = ? AND descr = ? AND prix_s = ? AND id_reservation = ?&quot;;</span>
+<span class="nc" id="L203">               ppRes = c.prepareStatement(rid);</span>
+<span class="nc" id="L204">               ppRes.setString(1, nom_s);</span>
+<span class="nc" id="L205">               ppRes.setString(2, descr);</span>
+<span class="nc" id="L206">               ppRes.setDouble(3, p);</span>
+<span class="nc" id="L207">               ppRes.setInt(4, id_reserv);</span>
+            }
+            else
+            {
+<span class="nc" id="L211">               rid = &quot;SELECT id_service FROM SERVICE_P WHERE nom_s = ? AND duree = ? AND prix_s = ? AND id_reservation = ?&quot;; </span>
+<span class="nc" id="L212">               ppRes = c.prepareStatement(rid);</span>
+<span class="nc" id="L213">               ppRes.setString(1, nom_s);</span>
+<span class="nc" id="L214">               ppRes.setString(2, duree);</span>
+<span class="nc" id="L215">               ppRes.setDouble(3, p);</span>
+<span class="nc" id="L216">               ppRes.setInt(4, id_reserv);</span>
+            }
+            
+<span class="nc" id="L219">            ResultSet res = ppRes.executeQuery();</span>
+            
+<span class="nc bnc" id="L221" title="All 2 branches missed.">            if(res.next())</span>
+            {
+<span class="nc" id="L223">               id = res.getInt(&quot;id_service&quot;);</span>
+            }
+            
+<span class="nc" id="L226">            res.close();</span>
+<span class="nc" id="L227">            ppRes.close();</span>
+        }
+<span class="nc" id="L229">        catch(SQLException e)</span>
+        {
+            //e.printStackTrace();
+<span class="nc" id="L232">        }</span>
+        
+<span class="nc" id="L234">        return id;</span>
+    }
+    
+    public static int getId_reservation(LocalDate date,  StatutReservation statut, int id_client)
+    {
+<span class="fc" id="L239">        int id = -1;</span>
+        try{
+<span class="fc" id="L241">            String rid = &quot;SELECT id_reservation FROM RESERVATION WHERE statut_r = ? AND date_r = ? AND id_client = ?&quot;;</span>
+<span class="fc" id="L242">            PreparedStatement ppRes = c.prepareStatement(rid);</span>
+<span class="fc" id="L243">            ppRes.setString(1, statut.name());</span>
+<span class="fc" id="L244">            ppRes.setDate(2, Date.valueOf(date));</span>
+<span class="fc" id="L245">            ppRes.setInt(3, id_client);</span>
+            
+<span class="fc" id="L247">            ResultSet res = ppRes.executeQuery();</span>
+            
+<span class="fc bfc" id="L249" title="All 2 branches covered.">            if(res.next())</span>
+            {
+<span class="fc" id="L251">               id = res.getInt(&quot;id_reservation&quot;);</span>
+            }
+            
+<span class="fc" id="L254">            res.close();</span>
+<span class="fc" id="L255">            ppRes.close();</span>
+        }
+<span class="nc" id="L257">        catch(SQLException e)</span>
+        {
+            //e.printStackTrace();
+<span class="fc" id="L260">        }</span>
+        
+<span class="fc" id="L262">        return id;</span>
+    }
+    
+    public static int getId_Produit_Stock(String name)
+    {
+<span class="nc" id="L267">        int id = -1;</span>
+        try{
+<span class="nc" id="L269">            String rid = &quot;SELECT id_produit FROM PRODUIT_STOCK WHERE nom_p = ?&quot;;</span>
+<span class="nc" id="L270">            PreparedStatement ppRes = c.prepareStatement(rid);</span>
+<span class="nc" id="L271">            ppRes.setString(1, name);</span>
+            
+<span class="nc" id="L273">            ResultSet res = ppRes.executeQuery();</span>
+            
+<span class="nc bnc" id="L275" title="All 2 branches missed.">            if(res.next())</span>
+            {
+<span class="nc" id="L277">               id = res.getInt(&quot;id_produit&quot;);</span>
+            }
+            
+<span class="nc" id="L280">            res.close();</span>
+<span class="nc" id="L281">            ppRes.close();</span>
+        }
+<span class="nc" id="L283">        catch(SQLException e)</span>
+        {
+            //e.printStackTrace();
+<span class="nc" id="L286">        }</span>
+        
+<span class="nc" id="L288">        return id;</span>
+    }
+    
+    public static int getId_Produit_Acheter(String name, int id_commande)
+    {
+<span class="fc" id="L293">        int id = -1;</span>
+        try{
+<span class="fc" id="L295">            String rid = &quot;SELECT id_produit FROM PRODUIT_ACHETER WHERE nom_p = ? AND id_commande = ?&quot;;</span>
+<span class="fc" id="L296">            PreparedStatement ppRes = c.prepareStatement(rid);</span>
+<span class="fc" id="L297">            ppRes.setString(1, name);</span>
+<span class="fc" id="L298">            ppRes.setInt(2, id_commande);</span>
+            
+<span class="fc" id="L300">            ResultSet res = ppRes.executeQuery();</span>
+            
+<span class="pc bpc" id="L302" title="1 of 2 branches missed.">            if(res.next())</span>
+            {
+<span class="nc" id="L304">               id = res.getInt(&quot;id_produit&quot;);</span>
+            }
+            
+<span class="fc" id="L307">            res.close();</span>
+<span class="fc" id="L308">            ppRes.close();</span>
+        }
+<span class="nc" id="L310">        catch(SQLException e)</span>
+        {
+            //e.printStackTrace();
+<span class="fc" id="L313">        }</span>
+        
+<span class="fc" id="L315">        return id;</span>
+    }
+    
+    public static int getId_Commande(int id_client, String statut)
+    {
+<span class="fc" id="L320">        int id = -1;</span>
+        try{
+<span class="fc" id="L322">            String rid = &quot;SELECT id_commande FROM COMMANDE WHERE statut_c = ? AND id_client = ?&quot;;</span>
+<span class="fc" id="L323">            PreparedStatement ppRes = c.prepareStatement(rid);</span>
+<span class="fc" id="L324">            ppRes.setString(1, statut);</span>
+<span class="fc" id="L325">            ppRes.setInt(2, id_client);</span>
+            
+<span class="fc" id="L327">            ResultSet res = ppRes.executeQuery();</span>
+            
+<span class="pc bpc" id="L329" title="1 of 2 branches missed.">            if(res.next())</span>
+            {
+<span class="nc" id="L331">               id = res.getInt(&quot;id_commande&quot;);</span>
+            }
+            
+<span class="fc" id="L334">            res.close();</span>
+<span class="fc" id="L335">            ppRes.close();</span>
+        }
+<span class="nc" id="L337">        catch(SQLException e)</span>
+        {
+           // e.printStackTrace();
+<span class="fc" id="L340">        }</span>
+        
+<span class="fc" id="L342">        return id;</span>
+    }
+    
+    public static boolean addAnimal(int id_client, String name, double p, int age, String espece)
+    {
+<span class="fc" id="L347">        boolean bol = false;</span>
+        
+        try{
+<span class="fc" id="L350">            String reqAdAn = &quot;INSERT INTO ANIMAL(nom_a, poids, age, espece, id_client) VALUES(?, ?, ?, ?, ?)&quot;;</span>
+            
+<span class="fc" id="L352">            PreparedStatement ppAdd = c.prepareStatement(reqAdAn);</span>
+            
+<span class="fc" id="L354">            ppAdd.setString(1, name);</span>
+<span class="fc" id="L355">            ppAdd.setDouble(2, p);</span>
+<span class="fc" id="L356">            ppAdd.setInt(3, age);</span>
+<span class="fc" id="L357">            ppAdd.setString(4, espece);</span>
+<span class="fc" id="L358">            ppAdd.setInt(5, id_client);</span>
+            
+<span class="fc" id="L360">            int add = ppAdd.executeUpdate();</span>
+<span class="pc bpc" id="L361" title="1 of 2 branches missed.">            if (add &gt; 0) {</span>
+<span class="fc" id="L362">                bol = true;</span>
+            }
+            
+<span class="fc" id="L365">            ppAdd.close();</span>
+        }
+<span class="nc" id="L367">        catch(SQLException e)</span>
+        {
+            //e.printStackTrace();
+<span class="fc" id="L370">        }</span>
+        
+<span class="fc" id="L372">        return bol;</span>
+    }     
+    
+    public static boolean addService(String nom_s, double prix, String duree, String descr, int id_reserv)
+    {
+<span class="fc" id="L377">        boolean bol = false;</span>
+        
+        try{
+<span class="fc" id="L380">            String req = &quot;INSERT INTO SERVICE_P (nom_s, prix_s, duree, descr, id_reservation) VALUES(?, ?, ?, ?, ?)&quot;;</span>
+<span class="fc" id="L381">            PreparedStatement ppState = c.prepareStatement(req);</span>
+<span class="fc" id="L382">            ppState.setString(1, nom_s);</span>
+<span class="fc" id="L383">            ppState.setDouble(2, prix);</span>
+<span class="fc" id="L384">            ppState.setString(3, duree);</span>
+<span class="fc" id="L385">            ppState.setString(4, descr);</span>
+<span class="fc" id="L386">            ppState.setInt(5, id_reserv);</span>
+            
+<span class="fc" id="L388">            int res = ppState.executeUpdate();</span>
+<span class="pc bpc" id="L389" title="1 of 2 branches missed.">            if(res &gt; 0)</span>
+            {
+<span class="fc" id="L391">                bol = true;</span>
+            }
+            
+<span class="fc" id="L394">            ppState.close();</span>
+        }
+<span class="nc" id="L396">        catch(SQLException e)</span>
+        {
+            //e.printStackTrace();
+<span class="fc" id="L399">        }</span>
+        
+<span class="fc" id="L401">        return bol;</span>
+    }
+    
+    public static boolean addReservation(int id, int id_client, String stat_r, Date d)
+    {
+<span class="fc" id="L406">        boolean bol = false;</span>
+        
+        try{
+<span class="fc" id="L409">            String req = &quot;INSERT INTO RESERVATION VALUES(?, ?, ?, ?)&quot;;</span>
+<span class="fc" id="L410">            PreparedStatement ppState = c.prepareStatement(req);</span>
+            
+<span class="fc" id="L412">            ppState.setInt(1, id);</span>
+<span class="fc" id="L413">            ppState.setString(2, stat_r);</span>
+<span class="fc" id="L414">            ppState.setDate(3, d);</span>
+<span class="fc" id="L415">            ppState.setInt(4, id_client);</span>
+
+<span class="fc" id="L417">            int add = ppState.executeUpdate();</span>
+<span class="pc bpc" id="L418" title="1 of 2 branches missed.">            if(add &gt; 0)</span>
+            {
+<span class="fc" id="L420">                bol = true;</span>
+            } 
+            
+<span class="fc" id="L423">            ppState.close();</span>
+        }
+<span class="nc" id="L425">        catch(SQLException e)</span>
+        {
+            //e.printStackTrace();
+<span class="fc" id="L428">        }</span>
+        
+<span class="fc" id="L430">        return bol;</span>
+    }
+    
+    public static boolean produitDispo(String name, int quantite)
+    {
+<span class="fc" id="L435">        boolean bol = false;</span>
+        try{
+<span class="fc" id="L437">            String req = &quot;SELECT COUNT(*) AS total FROM PRODUIT_STOCK WHERE nom_p = ? AND ? &lt;= stock&quot;;</span>
+<span class="fc" id="L438">            PreparedStatement ppState = c.prepareStatement(req);</span>
+<span class="fc" id="L439">            ppState.setString(1, name);</span>
+<span class="fc" id="L440">            ppState.setInt(2, quantite);</span>
+            
+<span class="fc" id="L442">            ResultSet res = ppState.executeQuery();</span>
+            
+<span class="pc bpc" id="L444" title="1 of 2 branches missed.">            if(res.next())</span>
+            {
+<span class="fc" id="L446">                int count = res.getInt(&quot;total&quot;);</span>
+<span class="fc bfc" id="L447" title="All 2 branches covered.">                if(count &gt; 0)</span>
+                {
+<span class="fc" id="L449">                    bol = true;</span>
+                }
+            }
+            
+<span class="fc" id="L453">            res.close();</span>
+<span class="fc" id="L454">            ppState.close();</span>
+        }
+<span class="nc" id="L456">        catch(SQLException e)</span>
+        {
+            //e.printStackTrace();
+<span class="fc" id="L459">        }</span>
+        
+<span class="fc" id="L461">        return bol;</span>
+    }
+   
+    public static double getPrixproduit(String name_p)
+    {
+<span class="fc" id="L466">        double res = -1;</span>
+        try{
+<span class="fc" id="L468">            String req = &quot;SELECT prix_p FROM PRODUIT_STOCK WHERE nom_p = ?&quot;;</span>
+<span class="fc" id="L469">            PreparedStatement ppState = c.prepareStatement(req);</span>
+<span class="fc" id="L470">            ppState.setString(1, name_p);</span>
+            
+<span class="fc" id="L472">            ResultSet price = ppState.executeQuery();</span>
+            
+<span class="pc bpc" id="L474" title="1 of 2 branches missed.">            if(price.next())</span>
+            {
+<span class="fc" id="L476">                res = price.getDouble(&quot;prix_p&quot;);</span>
+            }
+            
+<span class="fc" id="L479">            price.close();</span>
+<span class="fc" id="L480">            ppState.close();</span>
+        }
+<span class="nc" id="L482">        catch(SQLException e)</span>
+        {
+            //e.printStackTrace();
+<span class="fc" id="L485">        }</span>
+        
+<span class="fc" id="L487">        return res;</span>
+    }
+    
+    public static boolean updateProduitStock(int indicator, String nom_p, int qte)
+    {
+<span class="fc" id="L492">        boolean bol = false;</span>
+        try{
+<span class="fc" id="L494">            String reqAncStock = &quot;SELECT stock FROM PRODUIT_STOCK WHERE nom_p = ?&quot;;</span>
+<span class="fc" id="L495">            String req = &quot;UPDATE PRODUIT_STOCK SET stock = ? WHERE nom_p = ?&quot;;</span>
+<span class="fc" id="L496">            PreparedStatement ppState = c.prepareStatement(req);</span>
+<span class="fc" id="L497">            PreparedStatement ppAnc = c.prepareStatement(reqAncStock);</span>
+            
+<span class="fc" id="L499">            ppAnc.setString(1, nom_p);</span>
+            
+<span class="fc" id="L501">            ResultSet res = ppAnc.executeQuery();</span>
+<span class="pc bpc" id="L502" title="1 of 2 branches missed.">            if(res.next())</span>
+            {
+<span class="fc" id="L504">                int stock = res.getInt(&quot;stock&quot;);</span>
+                
+<span class="pc bpc" id="L506" title="1 of 2 branches missed.">                if(indicator == 1)</span>
+                {
+<span class="fc" id="L508">                    ppState.setInt(1, (stock-qte));</span>
+<span class="fc" id="L509">                    ppState.setString(2, nom_p);</span>
+                }
+                else
+                {
+<span class="nc" id="L513">                    ppState.setInt(1, (stock+qte));</span>
+<span class="nc" id="L514">                    ppState.setString(2, nom_p);</span>
+                }
+                
+                
+<span class="fc" id="L518">                int mod = ppState.executeUpdate();</span>
+<span class="pc bpc" id="L519" title="1 of 2 branches missed.">                if(mod &gt; 0)</span>
+                {
+<span class="fc" id="L521">                    bol = true;</span>
+                } 
+            }
+            
+<span class="fc" id="L525">            res.close();</span>
+<span class="fc" id="L526">            ppState.close();</span>
+        }
+<span class="nc" id="L528">        catch(SQLException e)</span>
+        {
+            //e.printStackTrace();
+<span class="fc" id="L531">        }</span>
+        
+<span class="fc" id="L533">        return bol;</span>
+    }
+    
+    public static boolean updateProduitAcheter(int id_produit, int qte, double nprix, int id_commande)
+    {
+<span class="nc" id="L538">        boolean bol = false;</span>
+        try{
+<span class="nc" id="L540">            String reqAncStock = &quot;SELECT qteChoisie, prix_p FROM PRODUIT_ACHETER WHERE id_produit = ? and id_commande = ?&quot;;</span>
+<span class="nc" id="L541">            String req = &quot;UPDATE PRODUIT_ACHETER SET qteChoisie = ?, prix_p = ? WHERE id_produit = ? AND id_commande = ?&quot;;</span>
+<span class="nc" id="L542">            PreparedStatement ppState = c.prepareStatement(req);</span>
+<span class="nc" id="L543">            PreparedStatement ppAnc = c.prepareStatement(reqAncStock);</span>
+            
+<span class="nc" id="L545">            ppAnc.setInt(1, id_produit);</span>
+<span class="nc" id="L546">            ppAnc.setInt(2, id_commande);</span>
+            
+<span class="nc" id="L548">            ResultSet res = ppAnc.executeQuery();</span>
+<span class="nc bnc" id="L549" title="All 2 branches missed.">            if(res.next())</span>
+            {
+<span class="nc" id="L551">                int qteChoisie = res.getInt(&quot;qteChoisie&quot;);</span>
+<span class="nc" id="L552">                double prix_anc = res.getDouble(&quot;prix_p&quot;);</span>
+                
+<span class="nc" id="L554">                ppState.setInt(1, (qteChoisie + qte));</span>
+<span class="nc" id="L555">                ppState.setDouble(2, (nprix + prix_anc));</span>
+<span class="nc" id="L556">                ppState.setInt(3, id_produit);</span>
+<span class="nc" id="L557">                ppState.setInt(4, id_commande);</span>
+                
+<span class="nc" id="L559">                int mod = ppState.executeUpdate();</span>
+<span class="nc bnc" id="L560" title="All 2 branches missed.">                if(mod &gt; 0)</span>
+                {
+<span class="nc" id="L562">                    bol = true;</span>
+                } 
+            }
+            
+<span class="nc" id="L566">            res.close();</span>
+<span class="nc" id="L567">            ppState.close();</span>
+        }
+<span class="nc" id="L569">        catch(SQLException e)</span>
+        {
+            //e.printStackTrace();
+<span class="nc" id="L572">        }</span>
+        
+<span class="nc" id="L574">        return bol;</span>
+    }
+    
+    public static boolean addProduit(String nom_p, int qteChoisie, double prix, int id_command)
+    {
+<span class="fc" id="L579">        boolean bol = false;</span>
+        
+        try{
+<span class="fc" id="L582">            String req = &quot;INSERT INTO PRODUIT_ACHETER(nom_p, qteChoisie, prix_p, id_commande) VALUES(?, ?, ?, ?)&quot;;</span>
+<span class="fc" id="L583">            PreparedStatement ppState = c.prepareStatement(req);</span>
+            
+<span class="fc" id="L585">            ppState.setString(1, nom_p);</span>
+<span class="fc" id="L586">            ppState.setInt(2, qteChoisie);</span>
+<span class="fc" id="L587">            ppState.setDouble(3, prix);</span>
+<span class="fc" id="L588">            ppState.setInt(4, id_command);</span>
+
+<span class="nc" id="L590">            int add = ppState.executeUpdate();</span>
+<span class="nc bnc" id="L591" title="All 2 branches missed.">            if(add &gt; 0)</span>
+            {
+<span class="nc" id="L593">                    bol = true;</span>
+            } 
+            
+<span class="nc" id="L596">            ppState.close();</span>
+        }
+<span class="fc" id="L598">        catch(SQLException e)</span>
+        {
+           // e.printStackTrace();
+<span class="nc" id="L601">        }</span>
+        
+<span class="fc" id="L603">        return bol;</span>
+    }
+   
+    public static boolean addCommande(int id, int id_client, String statut_c)
+    {
+<span class="fc" id="L608">        boolean bol = false;</span>
+        
+        try{
+<span class="fc" id="L611">            String req = &quot;INSERT INTO COMMANDE VALUES(?, ?, ?)&quot;;</span>
+<span class="fc" id="L612">            PreparedStatement ppState = c.prepareStatement(req);</span>
+            
+<span class="fc" id="L614">            ppState.setInt(1, id);</span>
+<span class="fc" id="L615">            ppState.setString(2, statut_c);</span>
+<span class="fc" id="L616">            ppState.setInt(3, id_client);</span>
+
+<span class="nc" id="L618">            int add = ppState.executeUpdate();</span>
+<span class="nc bnc" id="L619" title="All 2 branches missed.">            if(add &gt; 0)</span>
+            {
+<span class="nc" id="L621">                bol = true;</span>
+            } 
+            
+<span class="nc" id="L624">            ppState.close();</span>
+        }
+<span class="fc" id="L626">        catch(SQLException e)</span>
+        {
+           // e.printStackTrace();
+<span class="nc" id="L629">        }</span>
+        
+<span class="fc" id="L631">        return bol;</span>
+    }
+    
+    public static User infoUser(String email) {
+<span class="fc" id="L635">        User u = null;</span>
+        try {
+<span class="fc" id="L637">            String req = &quot;SELECT * FROM CLIENT WHERE mail = ?&quot;;</span>
+<span class="fc" id="L638">            PreparedStatement statement = c.prepareStatement(req);</span>
+<span class="fc" id="L639">            statement.setString(1, email);</span>
+<span class="fc" id="L640">            ResultSet rs = statement.executeQuery();</span>
+
+<span class="pc bpc" id="L642" title="1 of 2 branches missed.">            if (rs.next()) {</span>
+<span class="fc" id="L643">                String nom = rs.getString(&quot;nom&quot;);</span>
+<span class="fc" id="L644">                String prenom = rs.getString(&quot;prenom&quot;);</span>
+<span class="fc" id="L645">                String mail = rs.getString(&quot;mail&quot;);</span>
+<span class="fc" id="L646">                u = new User(prenom, nom, mail);</span>
+            }
+            
+<span class="fc" id="L649">            rs.close();</span>
+<span class="fc" id="L650">            statement.close();</span>
+<span class="nc" id="L651">        } catch (SQLException e) {</span>
+            //e.printStackTrace();
+<span class="fc" id="L653">        }</span>
+        
+<span class="fc" id="L655">        return u;</span>
+    }
+    
+    public static void getAllAnimal(User u)
+    {
+        //récuperer l'id du client dans la base de données
+<span class="fc" id="L661">        int id_client = BaseDeDonnee.getId_client(u.getMail());</span>
+<span class="fc" id="L662">        String req = &quot;SELECT * FROM ANIMAL WHERE id_client = ?&quot;;</span>
+        try
+        {
+<span class="fc" id="L665">            PreparedStatement pp = c.prepareStatement(req);</span>
+<span class="fc" id="L666">            pp.setInt(1, id_client);</span>
+            
+<span class="fc" id="L668">            ResultSet res = pp.executeQuery();</span>
+            
+<span class="pc bpc" id="L670" title="1 of 2 branches missed.">            while(res.next())</span>
+            {
+<span class="nc" id="L672">                String nom = res.getString(&quot;nom_a&quot;);</span>
+<span class="nc" id="L673">                String espece = res.getString(&quot;espece&quot;);</span>
+<span class="nc" id="L674">                int age = res.getInt(&quot;age&quot;);</span>
+<span class="nc" id="L675">                double p = res.getDouble(&quot;poids&quot;);</span>
+                
+<span class="nc" id="L677">                u.addAnimal(new Animal(nom, p, age, espece)); //ajout de l'animal</span>
+<span class="nc" id="L678">            }</span>
+            
+<span class="fc" id="L680">            res.close();</span>
+<span class="fc" id="L681">            pp.close();</span>
+        }
+<span class="nc" id="L683">        catch(SQLException e)</span>
+        {
+            //e.printStackTrace();
+<span class="fc" id="L686">        }</span>
+<span class="fc" id="L687">    }</span>
+    
+    public static void getAllReservation(User u)
+    {
+        //récuperer l'id du client dans la base de données
+<span class="fc" id="L692">        int id_client = BaseDeDonnee.getId_client(u.getMail());</span>
+        //requete pour recuperer les services que le user a reserver
+<span class="fc" id="L694">        String req = &quot;SELECT * FROM SERVICE_P WHERE id_reservation = ?&quot;;</span>
+<span class="fc" id="L695">        String reqReserv = &quot;SELECT * FROM RESERVATION WHERE id_client = ?&quot;;</span>
+        try
+        {
+<span class="fc" id="L698">            PreparedStatement pp = c.prepareStatement(req);</span>
+<span class="fc" id="L699">            PreparedStatement rs = c.prepareStatement(reqReserv);</span>
+<span class="fc" id="L700">            rs.setInt(1, id_client);</span>
+            
+<span class="fc" id="L702">            ResultSet ser = rs.executeQuery();</span>
+            
+            //pour chaque reservation
+<span class="pc bpc" id="L705" title="1 of 2 branches missed.">            while(ser.next())</span>
+            {
+<span class="nc" id="L707">                LocalDate date = ser.getDate(&quot;date_r&quot;).toLocalDate();</span>
+<span class="nc" id="L708">                String statut = ser.getString(&quot;statut_r&quot;);</span>
+<span class="nc" id="L709">                Reservation r = new Reservation(date);</span>
+<span class="nc" id="L710">                r.setStatut(statut);</span>
+                
+<span class="nc" id="L712">                int id_reservation = ser.getInt(&quot;id_reservation&quot;);</span>
+<span class="nc" id="L713">                pp.setInt(1, id_reservation);</span>
+<span class="nc" id="L714">                ResultSet res = pp.executeQuery();</span>
+                //pour chaque service inclut dans cette reservation
+<span class="nc bnc" id="L716" title="All 2 branches missed.">                while(res.next())</span>
+                {
+                    //on recupere les info de ce service
+<span class="nc" id="L719">                    String nom_s = res.getString(&quot;nom_s&quot;);</span>
+<span class="nc" id="L720">                    double p = res.getDouble(&quot;prix_s&quot;);</span>
+<span class="nc" id="L721">                    String duree = res.getString(&quot;duree&quot;);</span>
+<span class="nc" id="L722">                    String descr = res.getString(&quot;descr&quot;);</span>
+                    
+<span class="nc bnc" id="L724" title="All 5 branches missed.">                    switch(nom_s)</span>
+                    {
+<span class="nc" id="L726">                        case &quot;Promenade&quot; : r.ajoutService(new Promenade(p,duree)); break;</span>
+<span class="nc" id="L727">                        case &quot;Garde&quot; : r.ajoutService(new Garde(p,duree)); break;</span>
+<span class="nc" id="L728">                        case &quot;Toilettage&quot; : r.ajoutService(new Toilettage(p, TypeDeToilettage.valueOf(descr))); break;</span>
+<span class="nc" id="L729">                        case &quot;Education Canine&quot; : r.ajoutService(new EducationCanine(p,duree)); break;</span>
+                    }
+<span class="nc" id="L731">                }</span>
+<span class="nc" id="L732">                u.addReservation(r);</span>
+<span class="nc" id="L733">                res.close();</span>
+<span class="nc" id="L734">            }</span>
+<span class="fc" id="L735">            ser.close();</span>
+<span class="fc" id="L736">            pp.close();</span>
+<span class="fc" id="L737">            rs.close();</span>
+        }
+<span class="nc" id="L739">        catch(SQLException e)</span>
+        {
+            //e.printStackTrace();
+<span class="fc" id="L742">        }</span>
+<span class="fc" id="L743">    }</span>
+    
+    public static void getAllCommande(User u)
+    {
+<span class="fc" id="L747">        int id_client = BaseDeDonnee.getId_client(u.getMail());</span>
+        //requete pour recuperer les PRODUIT que le user a ACHETER
+<span class="fc" id="L749">        String req = &quot;SELECT * FROM PRODUIT_STOCK PS INNER JOIN PRODUIT_ACHETER P ON PS.id_produit = P.id_produit WHERE P.id_commande = ?&quot;;</span>
+<span class="fc" id="L750">        String reqReserv = &quot;SELECT * FROM COMMANDE WHERE id_client = ?&quot;;</span>
+        try
+        {
+<span class="fc" id="L753">            PreparedStatement pp = c.prepareStatement(req);</span>
+<span class="fc" id="L754">            PreparedStatement rs = c.prepareStatement(reqReserv);</span>
+<span class="fc" id="L755">            rs.setInt(1, id_client);</span>
+            
+<span class="fc" id="L757">            ResultSet ser = rs.executeQuery();</span>
+            //pour chaque commmande
+<span class="pc bpc" id="L759" title="1 of 2 branches missed.">            while(ser.next())</span>
+            {
+<span class="nc" id="L761">                String c = ser.getString(&quot;statut_c&quot;);</span>
+<span class="nc" id="L762">                Commande newc = new Commande();</span>
+<span class="nc" id="L763">                newc.setStatut(c);</span>
+                
+<span class="nc" id="L765">                int id_comm = ser.getInt(&quot;id_commande&quot;);</span>
+<span class="nc" id="L766">                pp.setInt(1, id_comm);</span>
+<span class="nc" id="L767">                ResultSet res = pp.executeQuery();</span>
+                //pour chaque produit dans cette commande
+<span class="nc bnc" id="L769" title="All 2 branches missed.">                while(res.next())</span>
+                {
+                    //on recupere les info de ce service
+<span class="nc" id="L772">                    String nom = res.getString(&quot;nom_p&quot;);</span>
+<span class="nc" id="L773">                    int qte = res.getInt(&quot;qteChoisie&quot;);</span>
+<span class="nc" id="L774">                    double prix = res.getDouble(&quot;prix_p&quot;);</span>
+                    
+<span class="nc" id="L776">                    String type = res.getString(&quot;type_produit&quot;);</span>
+                    
+<span class="nc bnc" id="L778" title="All 3 branches missed.">                    switch(type)</span>
+                    {
+<span class="nc" id="L780">                        case &quot;Accessoire&quot; : newc.ajoutProduit(new Accessoire(nom, prix, qte)); break;</span>
+<span class="nc" id="L781">                        case &quot;Médicament&quot; : newc.ajoutProduit(new ProduitPhamacetique(nom, prix, qte)); break;</span>
+                    }
+<span class="nc" id="L783">                }</span>
+<span class="nc" id="L784">                u.addCommande(newc);</span>
+<span class="nc" id="L785">                res.close();</span>
+                
+<span class="nc" id="L787">            }</span>
+<span class="fc" id="L788">            pp.close();</span>
+<span class="fc" id="L789">            rs.close();</span>
+        }
+<span class="nc" id="L791">        catch(SQLException e)</span>
+        {
+           // e.printStackTrace();
+<span class="fc" id="L794">        }</span>
+<span class="fc" id="L795">    }</span>
+    
+    public static boolean updateStatutReservation(int indicator, int id_reservation)
+    {
+<span class="nc" id="L799">        boolean bol = false;</span>
+<span class="nc" id="L800">        String req = &quot;&quot;;</span>
+<span class="nc bnc" id="L801" title="All 2 branches missed.">        if(indicator == 1)</span>
+        {
+<span class="nc" id="L803">            req = &quot;UPDATE RESERVATION SET statut_r = 'CONFIRMÉE' WHERE id_reservation = ?&quot;;</span>
+        }
+        else
+        {
+<span class="nc" id="L807">            req = &quot;DELETE FROM RESERVATION WHERE id_reservation = ?&quot;;</span>
+        }
+        
+        try{
+<span class="nc" id="L811">           PreparedStatement ppState = c.prepareStatement(req);</span>
+<span class="nc" id="L812">           ppState.setInt(1, id_reservation);</span>
+           
+<span class="nc" id="L814">           ResultSet res = ppState.executeQuery();</span>
+           
+<span class="nc bnc" id="L816" title="All 2 branches missed.">           if(res.next())</span>
+           {
+<span class="nc" id="L818">               bol = true;</span>
+           }
+        }
+<span class="nc" id="L821">        catch(SQLException e)</span>
+        {
+            //e.printStackTrace();
+<span class="nc" id="L824">        }</span>
+        
+<span class="nc" id="L826">        return bol;</span>
+    }
+    
+    public static boolean updateStatutCommande(int indicator, int id_commande)
+    {
+<span class="nc" id="L831">        boolean bol = false;</span>
+<span class="nc" id="L832">        String req = &quot;&quot;;</span>
+<span class="nc bnc" id="L833" title="All 2 branches missed.">        if(indicator == 1)</span>
+        {
+<span class="nc" id="L835">            req = &quot;UPDATE COMMANDE SET statut_c = 'CONFIRMÉE' WHERE id_commande = ?&quot;;</span>
+        }
+        else
+        {
+<span class="nc" id="L839">            req = &quot;DELETE FROM COMMANDE WHERE id_commande = ?&quot;;</span>
+        }
+        
+        try{
+<span class="nc" id="L843">           PreparedStatement ppState = c.prepareStatement(req);</span>
+<span class="nc" id="L844">           ppState.setInt(1, id_commande);</span>
+           
+<span class="nc" id="L846">           ResultSet res = ppState.executeQuery();</span>
+           
+<span class="nc bnc" id="L848" title="All 2 branches missed.">           if(res.next())</span>
+           {
+<span class="nc" id="L850">               bol = true;</span>
+           }
+        }
+<span class="nc" id="L853">        catch(SQLException e)</span>
+        {
+            //e.printStackTrace();
+<span class="nc" id="L856">        }</span>
+        
+<span class="nc" id="L858">        return bol;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

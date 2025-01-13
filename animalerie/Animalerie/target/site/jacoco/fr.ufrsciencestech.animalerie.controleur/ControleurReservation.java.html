@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ControleurReservation.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Animalerie</a> &gt; <a href="index.source.html" class="el_package">fr.ufrsciencestech.animalerie.controleur</a> &gt; <span class="el_source">ControleurReservation.java</span></div><h1>ControleurReservation.java</h1><pre class="source lang-java linenums">/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package fr.ufrsciencestech.animalerie.controleur;
+
+import fr.ufrsciencestech.animalerie.*;
+import fr.ufrsciencestech.animalerie.Toilettage.TypeDeToilettage;
+import fr.ufrsciencestech.animalerie.bd.BaseDeDonnee;
+import fr.ufrsciencestech.animalerie.view.*;
+import java.awt.Component;
+import java.awt.event.*;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.util.Enumeration;
+import javax.swing.*;
+
+/**
+ *
+ * @author delaton
+ */
+public class ControleurReservation extends Controleur{
+    private ReservationView reserv;
+    
+    public ControleurReservation(User user, View m)
+    {
+<span class="fc" id="L27">        super(user, m);</span>
+<span class="fc" id="L28">    }</span>
+    
+    
+    public void setVueG(View g)
+    {
+<span class="fc" id="L33">        super.menU = g;</span>
+<span class="fc" id="L34">    }</span>
+    
+    public void setRsView(ReservationView r)
+    {
+<span class="fc" id="L38">        this.reserv = r;</span>
+<span class="fc" id="L39">    }</span>
+    
+    public ReservationView getVReservation() {
+<span class="fc" id="L42">        return this.reserv;</span>
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent ae) {
+<span class="fc" id="L47">        Service s = null;</span>
+<span class="fc bfc" id="L48" title="All 2 branches covered.">        if(((Component)ae.getSource()).getName().equals(&quot;btConfirmer&quot;))</span>
+        {
+            // Récupérer le groupe de boutons radio pour la durée
+<span class="fc" id="L51">            ButtonGroup btDate = reserv.getBtDate(); </span>
+             // Récupérer l'Enumeration des boutons dans le groupe
+<span class="fc" id="L53">            Enumeration&lt;AbstractButton&gt; elements = btDate.getElements();</span>
+<span class="fc" id="L54">            LocalDate date = LocalDate.now();</span>
+
+            // Parcourir l'Enumeration avec un while
+<span class="pc bpc" id="L57" title="1 of 2 branches missed.">            while (elements.hasMoreElements()) {</span>
+<span class="fc" id="L58">                AbstractButton button = elements.nextElement();</span>
+<span class="pc bpc" id="L59" title="1 of 2 branches missed.">                if (button.isSelected()) {</span>
+<span class="pc bpc" id="L60" title="4 of 5 branches missed.">                   switch(button.getText())</span>
+                   {
+<span class="fc" id="L62">                       case &quot;Demain&quot; : date = date.plusDays(1); break;</span>
+<span class="nc" id="L63">                       case &quot;Après-demain&quot; : date = date.plusDays(2); break;</span>
+<span class="nc" id="L64">                       case &quot;Dans une semaine&quot; : date = date.plusWeeks(1); break;</span>
+<span class="nc" id="L65">                       case &quot;Dans deux semaines&quot; : date = date.plusWeeks(2); break;</span>
+<span class="nc" id="L66">                       default : date = date.plusDays(5); break;</span>
+                   }
+<span class="fc" id="L68">                   break;</span>
+                }
+<span class="nc" id="L70">            }</span>
+            
+<span class="fc" id="L72">            Reservation r = new Reservation(date);</span>
+            //ajout dans la base donnee
+<span class="fc" id="L74">            int id_client = BaseDeDonnee.getId_client(user.getMail());</span>
+            //si la reservation n'existe pas dans la base de donnee on l'ajoute
+<span class="pc bpc" id="L76" title="1 of 2 branches missed.">            if(BaseDeDonnee.getId_reservation(r.getDate(), r.getStatut(), id_client) == -1)</span>
+            {
+<span class="fc" id="L78">                System.out.println(&quot;Reservation inexistante dans la bd&quot;);</span>
+<span class="fc" id="L79">                BaseDeDonnee.addReservation(user.getNbReservations()+1, id_client, r.getStatut().name(), Date.valueOf(r.getDate()));</span>
+            }
+<span class="fc" id="L81">            int id_reserv = BaseDeDonnee.getId_reservation(r.getDate(), r.getStatut(), id_client);</span>
+<span class="fc" id="L82">            System.out.println(&quot;id_reservation -&gt; &quot;+id_reserv);</span>
+<span class="pc bpc" id="L83" title="1 of 2 branches missed.">            if(id_reserv != -1)</span>
+            {
+                // Récupérer le groupe de boutons radio pour la durée
+<span class="fc" id="L86">                ButtonGroup btGDuree = reserv.getBtGduree(); </span>
+                 // Récupérer l'Enumeration des boutons dans le groupe
+<span class="fc" id="L88">                elements = btGDuree.getElements();</span>
+                // Parcourir l'Enumeration avec un while
+<span class="fc" id="L90">                String duree = &quot;&quot;;</span>
+<span class="fc" id="L91">                int i=1;</span>
+<span class="pc bpc" id="L92" title="1 of 2 branches missed.">                while (elements.hasMoreElements()) {</span>
+<span class="fc" id="L93">                    AbstractButton button = elements.nextElement();</span>
+<span class="pc bpc" id="L94" title="1 of 2 branches missed.">                    if (button.isSelected()) {</span>
+<span class="fc" id="L95">                       duree = button.getText();</span>
+<span class="fc" id="L96">                       break;</span>
+                    }
+<span class="nc" id="L98">                    i++;</span>
+<span class="nc" id="L99">                }</span>
+
+                // Récupérer le groupe de boutons radio pour la durée
+<span class="fc" id="L102">                ButtonGroup btGReserv = reserv.getBtGReservation(); </span>
+                 // Récupérer l'Enumeration des boutons dans le groupe
+<span class="fc" id="L104">                elements = btGReserv.getElements();</span>
+                // Parcourir l'Enumeration avec un while
+<span class="fc bfc" id="L106" title="All 2 branches covered.">                while (elements.hasMoreElements()) {</span>
+<span class="fc" id="L107">                    AbstractButton button = elements.nextElement();</span>
+<span class="pc bpc" id="L108" title="1 of 2 branches missed.">                    if (button.isSelected()) {</span>
+<span class="fc" id="L109">                        double prix = 0.0;</span>
+<span class="pc bpc" id="L110" title="4 of 5 branches missed.">                        switch(button.getText())</span>
+                        {
+<span class="fc" id="L112">                            case &quot;Promenade&quot; : prix = 10.0 * i; s = new Promenade(prix,duree);</span>
+<span class="fc" id="L113">                                this.ajoutBaseDedonnee(&quot;Promenade&quot;, prix, duree, null, id_reserv);</span>
+<span class="fc" id="L114">                                break;</span>
+<span class="nc" id="L115">                            case &quot;Garde&quot; : prix = 20.0 * (i-1); s = new Garde(prix,duree); </span>
+<span class="nc" id="L116">                                this.ajoutBaseDedonnee(&quot;Garde&quot;, prix, duree, null, id_reserv);</span>
+<span class="nc" id="L117">                                break;</span>
+<span class="nc" id="L118">                            case &quot;Education Canine&quot; : prix = 50.0 * (i-1); s = new EducationCanine(prix,duree);</span>
+<span class="nc" id="L119">                                this.ajoutBaseDedonnee(&quot;Education Canine&quot;, prix, duree, null, id_reserv);</span>
+<span class="nc" id="L120">                                break;</span>
+<span class="nc" id="L121">                            case &quot;Toilettage&quot; : s = recupToit(id_reserv); break;</span>
+                        }
+                    }
+<span class="fc" id="L124">                }</span>
+
+<span class="fc" id="L126">                r.ajoutService(s);</span>
+<span class="fc" id="L127">                super.user.addReservation(r);</span>
+
+<span class="fc" id="L129">                DefaultListModel&lt;String&gt; model = new DefaultListModel&lt;&gt;();</span>
+<span class="fc" id="L130">                user.listReservationEncours(model);</span>
+<span class="fc" id="L131">                menU.getListReservation().setModel(model);</span>
+
+<span class="fc" id="L133">                reserv.showMessage(&quot;Service&quot;+ s.toString() + &quot; ajouter dans vos réservations&quot;, &quot;Succès&quot;, JOptionPane.INFORMATION_MESSAGE);</span>
+<span class="fc" id="L134">                reserv.dispose();</span>
+<span class="fc" id="L135">            }</span>
+            
+            else
+            {
+<span class="nc" id="L139">                reserv.showMessage(&quot;Échec ajout reservation dans la bd son id est &quot;+id_reserv, &quot;Échec&quot;, JOptionPane.INFORMATION_MESSAGE);</span>
+            }
+<span class="fc" id="L141">        }</span>
+        
+<span class="pc bpc" id="L143" title="1 of 2 branches missed.">        else if(((Component)ae.getSource()).getName().equals(&quot;btAnnuler&quot;))</span>
+        {
+<span class="fc" id="L145">            reserv.dispose();</span>
+        }
+<span class="fc" id="L147">    }</span>
+    
+    public Service recupToit(int id_reserv)
+    {
+<span class="nc" id="L151">        Service s = null;</span>
+<span class="nc" id="L152">        String des = &quot;&quot;;</span>
+<span class="nc" id="L153">        TypeDeToilettage tp = TypeDeToilettage.TOILETTAGE_DE_BASE;</span>
+<span class="nc" id="L154">        int i = 1; </span>
+        // Récupérer le groupe de boutons radio pour la durée
+<span class="nc" id="L156">        ButtonGroup btGDesc = reserv.getBtGDesc(); </span>
+        // Récupérer l'Enumeration des boutons dans le groupe
+<span class="nc" id="L158">        Enumeration&lt;AbstractButton&gt; eletDesc = btGDesc.getElements();</span>
+<span class="nc bnc" id="L159" title="All 2 branches missed.">        while (eletDesc.hasMoreElements()) {</span>
+<span class="nc" id="L160">            AbstractButton bt = eletDesc.nextElement();</span>
+<span class="nc bnc" id="L161" title="All 2 branches missed.">            if (bt.isSelected()) {</span>
+<span class="nc" id="L162">               des = bt.getText();</span>
+<span class="nc bnc" id="L163" title="All 6 branches missed.">               switch(des)</span>
+               {
+<span class="nc" id="L165">                   case &quot;Douche&quot; : tp = TypeDeToilettage.DOUCHE; break;</span>
+<span class="nc" id="L166">                   case &quot;Coupe et soins des ongles&quot; : tp = TypeDeToilettage.COUPE_ET_SOINS_DES_ONGLES; break;</span>
+<span class="nc" id="L167">                   case &quot;Tonnage complet&quot; : tp = TypeDeToilettage.TONNAGE_COMPLET; break;</span>
+<span class="nc" id="L168">                   case &quot;Rasage des coussinets&quot; : tp = TypeDeToilettage.RASAGE_DES_COUSSINET_DE_PATTES; break;</span>
+<span class="nc" id="L169">                   case &quot;Toilettge de base&quot; : tp = TypeDeToilettage.TOILETTAGE_DE_BASE; break;</span>
+               }
+<span class="nc" id="L171">               break;</span>
+            }
+<span class="nc" id="L173">            i++;</span>
+<span class="nc" id="L174">        }</span>
+<span class="nc" id="L175">        double prix = 30.0 * i;</span>
+<span class="nc" id="L176">        s = new Toilettage(prix, tp);</span>
+<span class="nc" id="L177">        this.ajoutBaseDedonnee(&quot;Toilettage&quot;, prix, null, tp.name(), id_reserv);</span>
+<span class="nc" id="L178">        return s;</span>
+    }
+    
+    public void ajoutBaseDedonnee(String nom, double prix, String duree, String desc, int id_reserv)
+    {
+<span class="pc bpc" id="L183" title="1 of 2 branches missed.">        if(BaseDeDonnee.addService(nom, prix, duree, desc, id_reserv))</span>
+        {
+<span class="fc" id="L185">            System.out.println(&quot;Ajout reussi du service &quot;+nom+&quot; &quot;+duree+&quot; &quot;+desc+&quot; id_reser : &quot;+id_reserv+&quot; dans la base de donnee&quot;);</span>
+                   
+        }
+        else
+        {
+<span class="nc" id="L190">            System.out.println(&quot;Echec ajout du service &quot;+nom+&quot; dans la base de donnee&quot;);</span>
+        }
+<span class="fc" id="L192">    }</span>
+
+    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

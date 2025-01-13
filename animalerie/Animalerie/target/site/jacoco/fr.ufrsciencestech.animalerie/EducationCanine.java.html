@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>EducationCanine.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Animalerie</a> &gt; <a href="index.source.html" class="el_package">fr.ufrsciencestech.animalerie</a> &gt; <span class="el_source">EducationCanine.java</span></div><h1>EducationCanine.java</h1><pre class="source lang-java linenums">/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package fr.ufrsciencestech.animalerie;
+
+/**
+ *
+ * @author delaton
+ */
+/**
+ * Classe représentant un service d'éducation canine.
+ * Ce service inclut une description, un prix et une durée.
+ * Il implémente l'interface Service pour garantir la compatibilité avec d'autres services.
+ * 
+ * @author delaton
+ */
+public class EducationCanine implements Service {
+    
+    
+    /**
+     * Le prix du service d'éducation canine (en euros).
+     */
+    private double prix;
+    
+    /**
+     * La durée de la session d'éducation canine
+     */
+    private String duree;
+    
+    /**
+     * Constructeur par défaut permettant de créer un service d'éducation canine 
+     * avec un prix par défaut de 50 euros pour une durée de 1 heure.
+     */
+<span class="fc" id="L35">    public EducationCanine() {</span>
+<span class="fc" id="L36">        this.prix = 50.0; // Prix par défaut en euros</span>
+<span class="fc" id="L37">        this.duree = &quot;1 heure&quot;; // Durée par défaut</span>
+<span class="fc" id="L38">    }</span>
+    
+    /**
+     * Constructeur permettant de créer un service d'éducation canine avec un prix et une durée.
+     * 
+     * @param prix Le prix du service (en euros).
+     * @param duree La durée de la session d'éducation canine.
+     */
+<span class="nc" id="L46">    public EducationCanine(double prix, String duree) {</span>
+<span class="nc" id="L47">        this.prix = prix;       // Initialisation du prix</span>
+<span class="nc" id="L48">        this.duree = duree;     // Initialisation de la durée</span>
+<span class="nc" id="L49">    }</span>
+    
+    
+
+    /**
+     * Récupère le prix du service d'éducation canine.
+     * 
+     * @return Le prix du service (en euros).
+     */
+    @Override
+    public double getPrix() {
+<span class="fc" id="L60">        return this.prix;</span>
+    }
+    
+    /**
+     * Récupère la durée du service d'éducation canine.
+     * 
+     * @return La durée de la session d'éducation canine.
+     */
+    public String getDuree() {
+<span class="fc" id="L69">        return this.duree;</span>
+    }
+    
+    
+    /**
+     * Modifie le prix du service d'éducation canine.
+     * 
+     * @param p Le nouveau prix (en euros).
+     */
+    public void setPrix(double p) {
+<span class="fc" id="L79">        this.prix = p;  // Modification du prix</span>
+<span class="fc" id="L80">    }</span>
+    
+    /**
+     * Modifie la durée du service d'éducation canine.
+     * 
+     * @param chaine La nouvelle durée de la session.
+     */
+    public void setDuree(String chaine) {
+<span class="fc" id="L88">        this.duree = chaine; // Modification de la durée</span>
+<span class="fc" id="L89">    }</span>
+    
+    /**
+     * Fournit une représentation sous forme de chaîne de caractères du service d'éducation canine.
+     * 
+     * @return Une chaîne contenant les détails du service (description, prix, durée).
+     */
+    @Override
+    public String toString() {
+<span class="fc" id="L98">        return &quot;Éducation Canine ---&gt; Durée : &quot;+this.duree+&quot; | Prix : &quot;+this.getPrix()+&quot;€&quot;;</span>
+    }
+
+    @Override
+    public String getDescr() {
+<span class="fc" id="L103">        return null;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

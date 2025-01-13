@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ControleurAnimal.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Animalerie</a> &gt; <a href="index.source.html" class="el_package">fr.ufrsciencestech.animalerie.controleur</a> &gt; <span class="el_source">ControleurAnimal.java</span></div><h1>ControleurAnimal.java</h1><pre class="source lang-java linenums">/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package fr.ufrsciencestech.animalerie.controleur;
+
+import fr.ufrsciencestech.animalerie.*;
+import fr.ufrsciencestech.animalerie.bd.BaseDeDonnee;
+import fr.ufrsciencestech.animalerie.view.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.*;
+import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
+
+/**
+ *
+ * @author delaton
+ */
+public class ControleurAnimal extends Controleur{
+    private AjoutAnimalView anView;
+    
+    public ControleurAnimal(User user, View m)
+    {
+<span class="fc" id="L25">        super(user, m);</span>
+<span class="fc" id="L26">    }</span>
+    
+    public void setVueG(View g)
+    {
+<span class="fc" id="L30">        this.menU = g;</span>
+<span class="fc" id="L31">    }</span>
+    
+    public void setAnView(AjoutAnimalView p)
+    {
+<span class="fc" id="L35">        this.anView = p;</span>
+<span class="fc" id="L36">    }</span>
+    
+    public AjoutAnimalView getAnView() 
+    {
+<span class="fc" id="L40">        return this.anView;</span>
+    }
+    
+    
+    @Override
+    public void actionPerformed(ActionEvent ae) {
+<span class="fc bfc" id="L46" title="All 2 branches covered.">        if(((Component) ae.getSource()).getName().equals(&quot;Confirmer&quot;))</span>
+        {
+<span class="fc" id="L48">            String nom = anView.getNom().getText();</span>
+<span class="fc" id="L49">            int age = Integer.parseInt(anView.getAge().getText());</span>
+<span class="fc" id="L50">            String espece = anView.getEspece().getText();</span>
+<span class="fc" id="L51">            double p = Double.parseDouble(anView.getPoids().getText());</span>
+<span class="fc" id="L52">            Animal a = new Animal(nom, p, age, espece);</span>
+            
+<span class="fc" id="L54">            anView.getNom().setText(&quot;&quot;);</span>
+<span class="fc" id="L55">            anView.getAge().setText(&quot;&quot;);</span>
+<span class="fc" id="L56">            anView.getEspece().setText(&quot;&quot;);</span>
+<span class="fc" id="L57">            anView.getPoids().setText(&quot;&quot;);</span>
+            
+            //ajout de l'animal
+<span class="fc" id="L60">            int id_client = BaseDeDonnee.getId_client(this.user.getMail());</span>
+<span class="pc bpc" id="L61" title="1 of 2 branches missed.">            if(BaseDeDonnee.addAnimal(id_client, nom, p, age, espece))</span>
+            {
+<span class="fc" id="L63">                this.user.addAnimal(a);</span>
+<span class="fc" id="L64">                DefaultListModel&lt;String&gt; model = new DefaultListModel&lt;&gt;();</span>
+<span class="fc" id="L65">                user.listAnimal(model);</span>
+<span class="fc" id="L66">                menU.getListAnimaux().setModel(model);</span>
+                
+<span class="fc" id="L68">                anView.showMessage(&quot;Animal ajouté avec succès&quot;, &quot;Succès&quot;, JOptionPane.INFORMATION_MESSAGE);</span>
+<span class="fc" id="L69">                anView.dispose();</span>
+<span class="fc" id="L70">            }</span>
+            else
+            {
+<span class="nc" id="L73">                anView.showMessage(&quot;Échec ajout animal &quot;+nom, &quot;Échec&quot;, JOptionPane.INFORMATION_MESSAGE);</span>
+            }
+<span class="fc" id="L75">        }</span>
+        else
+        {
+<span class="fc" id="L78">            anView.getNom().setText(&quot;&quot;);</span>
+<span class="fc" id="L79">            anView.getAge().setText(&quot;&quot;);</span>
+<span class="fc" id="L80">            anView.getEspece().setText(&quot;&quot;);</span>
+<span class="fc" id="L81">            anView.getPoids().setText(&quot;&quot;);</span>
+<span class="fc" id="L82">            anView.dispose();</span>
+        }
+<span class="fc" id="L84">    }</span>
+    
+    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

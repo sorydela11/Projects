@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ControleurConnexion.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Animalerie</a> &gt; <a href="index.source.html" class="el_package">fr.ufrsciencestech.animalerie.controleur</a> &gt; <span class="el_source">ControleurConnexion.java</span></div><h1>ControleurConnexion.java</h1><pre class="source lang-java linenums">/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package fr.ufrsciencestech.animalerie.controleur;
+
+import fr.ufrsciencestech.animalerie.User;
+import fr.ufrsciencestech.animalerie.bd.*;
+import fr.ufrsciencestech.animalerie.view.*;
+import java.awt.Component;
+import java.awt.GraphicsEnvironment;
+import java.awt.event.ActionEvent;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.*;
+
+/**
+ *
+ * @author delaton
+ */
+public class ControleurConnexion extends Controleur{
+    private UserConnect conView;
+    private UserInscription insView;
+    
+    public ControleurConnexion(UserConnect c, UserInscription u) {
+<span class="fc" id="L27">        super(null, null);</span>
+<span class="fc" id="L28">        this.conView = c;</span>
+<span class="fc" id="L29">        this.insView = u;</span>
+<span class="fc" id="L30">    }</span>
+    
+    public void setConnectVue(UserConnect u)
+    {
+<span class="nc" id="L34">        this.conView = u;</span>
+<span class="nc" id="L35">    }</span>
+    
+    public void setInscriptionVue(UserInscription u)
+    {
+<span class="nc" id="L39">        this.insView = u;</span>
+<span class="nc" id="L40">    }</span>
+    
+    public void setUser(User u)
+    {
+<span class="nc" id="L44">        super.user = u;</span>
+<span class="nc" id="L45">    }</span>
+    
+    @Override
+    public void actionPerformed(ActionEvent ae) {
+<span class="fc bfc" id="L49" title="All 2 branches covered.">        if (((Component) ae.getSource()).getName().equals(&quot;Connexion&quot;)) {</span>
+<span class="fc" id="L50">            String mail = conView.jMail().getText();</span>
+<span class="fc" id="L51">            String password = conView.JPass().getText();</span>
+<span class="fc bfc" id="L52" title="All 2 branches covered.">            if(BaseDeDonnee.userExist(mail, password))</span>
+            {
+<span class="fc" id="L54">                conView.showMessage(&quot;Connexion en cours&quot;, &quot;Succès&quot;, JOptionPane.INFORMATION_MESSAGE);</span>
+<span class="fc" id="L55">                user = BaseDeDonnee.infoUser(mail);</span>
+<span class="fc" id="L56">                BaseDeDonnee.getAllAnimal(user);</span>
+<span class="fc" id="L57">                BaseDeDonnee.getAllReservation(user);</span>
+<span class="fc" id="L58">                BaseDeDonnee.getAllCommande(user);</span>
+                
+<span class="fc" id="L60">                menU = new View();</span>
+<span class="fc" id="L61">                ControleurMenu c = new ControleurMenu(user, menU);</span>
+<span class="fc" id="L62">                menU.ajoutControleur(c);</span>
+                
+                //maj info du user
+<span class="fc" id="L65">                menU.setInformation(user.getLastName(), user.getFirstName(), user.getMail());</span>
+                
+<span class="fc" id="L67">                DefaultListModel&lt;String&gt; model = new DefaultListModel&lt;&gt;();</span>
+<span class="fc" id="L68">                user.listReservationEncours(model);</span>
+<span class="fc" id="L69">                menU.getListReservation().setModel(model);</span>
+
+<span class="fc" id="L71">                model = new DefaultListModel&lt;&gt;();</span>
+<span class="fc" id="L72">                user.listCommandeEncours(model);</span>
+<span class="fc" id="L73">                menU.getListCommande().setModel(model);</span>
+
+<span class="fc" id="L75">                model = new DefaultListModel&lt;&gt;();</span>
+<span class="fc" id="L76">                user.listAnimal(model);</span>
+<span class="fc" id="L77">                menU.getListAnimaux().setModel(model);</span>
+                
+<span class="fc" id="L79">                model = new DefaultListModel&lt;&gt;();</span>
+<span class="fc" id="L80">                user.listCommandeValider(model);</span>
+<span class="fc" id="L81">                user.listReservationValider(model);</span>
+<span class="fc" id="L82">                menU.getListHistorique().setModel(model);</span>
+                
+<span class="fc" id="L84">                conView.jMail().setText(&quot;&quot;);</span>
+<span class="fc" id="L85">                conView.JPass().setText(&quot;&quot;);</span>
+<span class="fc" id="L86">                conView.dispose();</span>
+                
+                 // Agrandir le JFrame à la taille de l'écran
+<span class="fc" id="L89">                menU.setExtendedState(JFrame.MAXIMIZED_BOTH); // Maximiser la fenêtre</span>
+<span class="fc" id="L90">                menU.setBounds(GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds()); // Adapter à l'écran</span>
+
+<span class="fc" id="L92">                menU.setVisible(true);</span>
+<span class="fc" id="L93">            }</span>
+            else
+            {
+<span class="fc" id="L96">                conView.showMessage(&quot;Utilisateur inexistant : &quot;+mail+&quot; | &quot;+password+&quot;! Créer un compte ou vérifier vos identifiant&quot;, &quot;Échec&quot;, JOptionPane.INFORMATION_MESSAGE);</span>
+<span class="fc" id="L97">                conView.jMail().setText(&quot;&quot;);</span>
+<span class="fc" id="L98">                conView.JPass().setText(&quot;&quot;);</span>
+            }
+            
+<span class="fc" id="L101">        }</span>
+        
+<span class="fc bfc" id="L103" title="All 2 branches covered.">        else if(((Component) ae.getSource()).getName().equals(&quot;Inscription&quot;)){</span>
+<span class="fc" id="L104">            String nom = insView.jNom().getText();</span>
+<span class="fc" id="L105">            String prenom = insView.jPrenom().getText();</span>
+<span class="fc" id="L106">            String mail = insView.jMail().getText();</span>
+<span class="fc" id="L107">            String password = insView.JPass().getText();</span>
+            
+<span class="pc bpc" id="L109" title="1 of 2 branches missed.">            if(this.verifyEntryMailAndPassWord(mail, password))</span>
+            {
+<span class="pc bpc" id="L111" title="1 of 2 branches missed.">                if(BaseDeDonnee.createUser(nom, prenom, mail, password))</span>
+                {
+<span class="fc" id="L113">                    insView.showMessage(&quot;Utilisateur ajouté avec succès&quot;, &quot;Succès&quot;, JOptionPane.INFORMATION_MESSAGE);</span>
+<span class="fc" id="L114">                    insView.jMail().setText(&quot;&quot;);</span>
+<span class="fc" id="L115">                    insView.JPass().setText(&quot;&quot;);</span>
+<span class="fc" id="L116">                    insView.jNom().setText(&quot;&quot;);</span>
+<span class="fc" id="L117">                    insView.jPrenom().setText(&quot;&quot;);</span>
+<span class="fc" id="L118">                    insView.dispose();</span>
+<span class="fc" id="L119">                    user = new User(prenom, nom, mail);</span>
+<span class="fc" id="L120">                    menU = new View();</span>
+<span class="fc" id="L121">                    ControleurMenu c = new ControleurMenu(user, menU);</span>
+<span class="fc" id="L122">                    menU.ajoutControleur(c);</span>
+
+                    //maj info du user
+<span class="fc" id="L125">                    menU.setInformation(nom, prenom, mail);</span>
+<span class="fc" id="L126">                    menU.setVisible(true);</span>
+<span class="fc" id="L127">                }</span>
+                else
+                {
+<span class="nc" id="L130">                    insView.showMessage(&quot;Mail : &quot;+mail+&quot; déja existant, utiliser un autre mail ou connectez vous&quot;, &quot;Échec&quot;, JOptionPane.INFORMATION_MESSAGE);</span>
+                }
+            }
+            else
+            {
+<span class="nc" id="L135">                insView.showMessage(&quot;Entrée invalide !!! Mail incorrect ou mot de passe trop court (moins de 6 caractères) !!! \n Exemple : Mail -&gt; username@gmail.com | Mot de passe -&gt; abc123?!&quot;, &quot;Échec&quot;, JOptionPane.INFORMATION_MESSAGE);</span>
+            }
+<span class="fc" id="L137">        }</span>
+        
+<span class="fc bfc" id="L139" title="All 2 branches covered.">        else if(((Component) ae.getSource()).getName().equals(&quot;ViewInscription&quot;)){</span>
+<span class="fc" id="L140">            insView.setVisible(true);</span>
+<span class="fc" id="L141">            conView.dispose();</span>
+        }
+        
+<span class="fc bfc" id="L144" title="All 2 branches covered.">        else if(((Component) ae.getSource()).getName().equals(&quot;ViewConnexion&quot;))</span>
+        {
+<span class="fc" id="L146">            conView.setVisible(true);</span>
+<span class="fc" id="L147">            insView.dispose();</span>
+        }
+        
+<span class="pc bpc" id="L150" title="1 of 2 branches missed.">        else if(((Component) ae.getSource()).getName().equals(&quot;Quit&quot;))</span>
+        {
+<span class="fc" id="L152">            conView.dispose();</span>
+<span class="fc" id="L153">            insView.dispose();</span>
+            try {
+<span class="fc" id="L155">                BaseDeDonnee.c.close();</span>
+<span class="nc" id="L156">            } catch (SQLException ex) {</span>
+<span class="nc" id="L157">                Logger.getLogger(ControleurConnexion.class.getName()).log(Level.SEVERE, null, ex);</span>
+<span class="fc" id="L158">            }</span>
+        }
+<span class="fc" id="L160">    }</span>
+    
+    
+    private boolean verifyEntryMailAndPassWord(String mail, String pass)
+    {
+<span class="fc" id="L165">        boolean res = true;</span>
+        
+<span class="pc bpc" id="L167" title="1 of 2 branches missed.">        if(!mail.contains(&quot;@gmail.com&quot;))</span>
+        {
+<span class="nc" id="L169">            res = false;</span>
+        }
+<span class="pc bpc" id="L171" title="1 of 2 branches missed.">        else if(pass.length() &lt; 6)</span>
+        {
+<span class="nc" id="L173">            res = false;</span>
+        }
+        
+<span class="fc" id="L176">        return res;</span>
+    }
+    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>User.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Animalerie</a> &gt; <a href="index.source.html" class="el_package">fr.ufrsciencestech.animalerie</a> &gt; <span class="el_source">User.java</span></div><h1>User.java</h1><pre class="source lang-java linenums">package fr.ufrsciencestech.animalerie;
+
+import java.util.ArrayList;
+import javax.swing.DefaultListModel;
+
+
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+
+/**
+ *
+ * @author delaton
+ * Classe représentant un utilisateur avec des informations personnelles telles que le prénom, le nom, 
+ * l'adresse mail
+ * La classe permet de définir ces informations, de les modifier, et de les afficher.
+ * 
+ */
+public class User {
+
+    /**
+     * Le prénom de l'utilisateur.
+     */
+    private String firstName;
+
+    /**
+     * Le nom de famille de l'utilisateur.
+     */
+    private String lastName;
+
+    /**
+     * L'adresse mail de l'utilisateur.
+     */
+    private String mail;
+    
+    
+    /**
+     * La liste de ses animaux.
+     */
+    private ArrayList&lt;Animal&gt; mesAnimaux;
+    
+    /**
+     * La liste de ses reservations.
+     */
+    private ArrayList&lt;Reservation&gt; mesReservations;
+    
+    /**
+     * La liste de ses commandes.
+     */
+    private ArrayList&lt;Commande&gt; mesCommandes;
+    
+    // Liste statique partagée contenant tous les utilisateurs
+<span class="fc" id="L54">    private static ArrayList&lt;User&gt; users = new ArrayList&lt;&gt;();</span>
+    
+
+    /**
+     * Constructeur permettant de créer un utilisateur avec ses informations personnelles.
+     * 
+     * @param ftName Le prénom de l'utilisateur.
+     * @param ltName Le nom de famille de l'utilisateur.
+     * @param mail L'adresse mail de l'utilisateur.
+     */
+<span class="fc" id="L64">    public User(String ftName, String ltName, String mail) {</span>
+<span class="fc" id="L65">        this.firstName = ftName;</span>
+<span class="fc" id="L66">        this.lastName = ltName;</span>
+<span class="fc" id="L67">        this.mail = mail;</span>
+<span class="fc" id="L68">        this.mesAnimaux = new ArrayList&lt;Animal&gt;();</span>
+<span class="fc" id="L69">        this.mesReservations = new ArrayList&lt;Reservation&gt;();</span>
+<span class="fc" id="L70">        this.mesCommandes = new ArrayList&lt;Commande&gt;();</span>
+    
+<span class="fc" id="L72">    }</span>
+    
+    /**
+     * Constructeur par copie.
+     * @param c l'utilisateur existant;
+     */
+<span class="nc" id="L78">    public User(User c) {</span>
+<span class="nc" id="L79">        this.firstName = c.firstName;</span>
+<span class="nc" id="L80">        this.lastName = c.lastName;</span>
+<span class="nc" id="L81">        this.mail = c.mail;</span>
+<span class="nc" id="L82">        this.mesAnimaux = new ArrayList&lt;&gt;(c.mesAnimaux);</span>
+<span class="nc" id="L83">        this.mesReservations = new ArrayList&lt;&gt;(c.mesReservations);</span>
+<span class="nc" id="L84">        this.mesCommandes = new ArrayList&lt;&gt;(c.mesCommandes);</span>
+<span class="nc" id="L85">    }</span>
+    
+
+    /**
+     * Modifie le prénom de l'utilisateur.
+     * 
+     * @param chaine Le nouveau prénom de l'utilisateur.
+     */
+    public void setFirstName(String chaine) {
+<span class="fc" id="L94">        this.firstName = chaine;</span>
+<span class="fc" id="L95">    }</span>
+
+    /**
+     * Récupère le prénom de l'utilisateur.
+     * 
+     * @return Le prénom de l'utilisateur.
+     */
+    public String getFirstName() {
+<span class="fc" id="L103">        return this.firstName;</span>
+    }
+    
+
+    
+    
+    /**
+     * Modifie le nom de famille de l'utilisateur.
+     * 
+     * @param chaine Le nouveau nom de famille.
+     */
+    public void setLastName(String chaine) {
+<span class="fc" id="L115">        this.lastName = chaine;</span>
+<span class="fc" id="L116">    }</span>
+
+    /**
+     * Récupère le nom de famille de l'utilisateur.
+     * 
+     * @return Le nom de famille de l'utilisateur.
+     */
+    public String getLastName() {
+<span class="fc" id="L124">        return this.lastName;</span>
+    }
+
+    /**
+     * Modifie l'adresse mail de l'utilisateur.
+     * 
+     * @param chaine La nouvelle adresse mail.
+     */
+    public void setMail(String chaine) {
+<span class="fc" id="L133">        this.mail = chaine;</span>
+<span class="fc" id="L134">    }</span>
+
+    /**
+     * Récupère l'adresse mail de l'utilisateur.
+     * 
+     * @return L'adresse mail de l'utilisateur.
+     */
+    public String getMail() {
+<span class="fc" id="L142">        return this.mail;</span>
+    }
+
+    /**
+     * Retourne le nombre d'animaux enregistrés pour cet utilisateur.
+     *
+     * @return le nombre total d'animaux sous forme d'un entier.
+     */
+    public int getNbAnimaux()
+    {
+<span class="fc" id="L152">        return this.mesAnimaux.size();</span>
+    }
+    
+     /**
+     * Ajoute un animal à la liste des animaux.
+     *
+     * @param an l'animal à ajouter, représenté par une instance de la classe Animal.
+     */
+    public void addAnimal(Animal an)
+    {
+<span class="fc" id="L162">        this.mesAnimaux.add(an);</span>
+<span class="fc" id="L163">    }</span>
+    
+    /**
+    * Remplit le modèle fourni avec les informations de tous les animaux associés à l'utilisateur.
+    * 
+    * @param modelAnimal un modèle de liste dans lequel les informations des animaux seront ajoutées.
+    *                         Chaque entrée représente un animal avec des détails tels que le nom, l'espèce, etc.
+    */
+    public void listAnimal(DefaultListModel&lt;String&gt; modelAnimal) 
+    {
+<span class="fc bfc" id="L173" title="All 2 branches covered.">        for (Animal an : mesAnimaux) {</span>
+<span class="fc" id="L174">            modelAnimal.addElement(an.toString());</span>
+<span class="fc" id="L175">        }</span>
+<span class="fc" id="L176">    }</span>
+    
+    /**
+     * Retourne le nombre de reservations enregistrés pour cet utilisateur.
+     *
+     * @return le nombre total de reservation sous forme d'un entier.
+     */
+    public int getNbReservations()
+    {
+<span class="fc" id="L185">        return this.mesReservations.size();</span>
+    }
+    
+    
+    public Reservation getReservation(int i)
+    {
+<span class="nc bnc" id="L191" title="All 4 branches missed.">        if(i &gt;= 0 &amp;&amp; i &lt; this.getNbReservations())</span>
+        {
+<span class="nc" id="L193">            return this.mesReservations.get(i);</span>
+        }
+        
+<span class="nc" id="L196">        return null;</span>
+    }
+    
+    
+    
+     /**
+     * Ajoute une reservation à la liste des reservations dont la date de reservation diffère
+     * de celle qui sont déja dans la liste.
+     * Sinon ,ajout les services reserver dans la nouvelle reservation dans la reservation
+     * qui existe déja à la même date.
+     *
+     * @param r la reservation à ajouter, représenté par une instance de la classe Reservation.
+     */
+    public void addReservation(Reservation r)
+    {
+<span class="fc bfc" id="L211" title="All 2 branches covered.">        if(this.getNbReservations() == 0)</span>
+        {
+<span class="fc" id="L213">            this.mesReservations.add(r);</span>
+        }
+        else
+        {
+<span class="fc" id="L217">            boolean bol = false;</span>
+<span class="fc bfc" id="L218" title="All 2 branches covered.">            for(int i=0; i&lt;this.getNbReservations() ; i++)</span>
+            {
+<span class="pc bpc" id="L220" title="1 of 4 branches missed.">                if(r.getDate().equals(this.mesReservations.get(i).getDate()) &amp;&amp; !this.mesReservations.get(i).estConfirmee())</span>
+                {
+<span class="fc" id="L222">                    this.mesReservations.get(i).ajoutAllService(r);</span>
+<span class="fc" id="L223">                    bol = true;</span>
+                }
+            }
+<span class="fc bfc" id="L226" title="All 2 branches covered.">            if(!bol)</span>
+            {
+<span class="fc" id="L228">                this.mesReservations.add(r);    </span>
+            }
+        }
+<span class="fc" id="L231">    }</span>
+    
+    public void removeReservation(Reservation r)
+    {
+<span class="fc bfc" id="L235" title="All 2 branches covered.">        for(int i=0; i&lt;this.getNbReservations(); i++)</span>
+        {
+<span class="pc bpc" id="L237" title="1 of 2 branches missed.">            if(this.mesReservations.get(i).equals(r))</span>
+            {
+<span class="fc" id="L239">                this.mesReservations.remove(this.mesReservations.get(i));</span>
+            }
+        }
+<span class="fc" id="L242">    }</span>
+    
+    public void removeAllReservation()
+    {
+<span class="fc" id="L246">        this.mesReservations.clear();</span>
+<span class="fc" id="L247">    }</span>
+    
+    
+    /**
+    * Remplit le modèle fourni avec les informations de toutes les réservations en cours de l'utilisateur.
+    * 
+    * @param modelReservation un modèle de liste dans lequel les informations des réservations en cours 
+    *                         seront ajoutées. Chaque entrée représente une réservation en cours.
+    */
+    public void listReservationEncours(DefaultListModel&lt;String&gt; modelReservation)
+    {
+<span class="fc bfc" id="L258" title="All 2 branches covered.">        for(int i=0; i&lt;this.getNbReservations(); i++)</span>
+        {
+<span class="fc" id="L260">            Reservation r = this.mesReservations.get(i);</span>
+<span class="pc bpc" id="L261" title="1 of 2 branches missed.">            if(!r.estConfirmee())</span>
+            {
+<span class="fc" id="L263">                modelReservation.addElement(&quot;Reservation n°&quot;+(i+1)+&quot; -&gt; &quot;+r.toString());</span>
+            }
+        }
+<span class="fc" id="L266">    }</span>
+
+   /**
+    * Remplit le modèle fourni avec les informations de toutes les réservations validées par l'utilisateur.
+    * 
+    * @param modelReservation un modèle de liste dans lequel les informations des réservations validées 
+    *                         seront ajoutées. Chaque entrée représente une réservation validée.
+    */
+    public void listReservationValider(DefaultListModel&lt;String&gt; modelReservation)
+    {
+<span class="fc bfc" id="L276" title="All 2 branches covered.">        for(int i=0; i&lt;this.getNbReservations(); i++)</span>
+        {
+<span class="fc" id="L278">            Reservation r = this.mesReservations.get(i);</span>
+<span class="pc bpc" id="L279" title="1 of 2 branches missed.">            if(r.estConfirmee())</span>
+            {
+<span class="fc" id="L281">                modelReservation.addElement(&quot;Reservation n°&quot;+(i+1)+&quot; -&gt; &quot;+r.toString());</span>
+            }
+        }
+<span class="fc" id="L284">    }</span>
+    
+    /**
+     * Retourne le nombre de commandes enregistrés pour cet utilisateur.
+     *
+     * @return le nombre total de commandes sous forme d'un entier.
+     */
+    public int getNbCommandes()
+    {
+<span class="fc" id="L293">        return this.mesCommandes.size();</span>
+    }
+    
+    public Commande getCommande(int i)
+    {
+<span class="nc bnc" id="L298" title="All 4 branches missed.">        if(i &gt;= 0 &amp;&amp; i &lt; this.getNbCommandes())</span>
+        {
+<span class="nc" id="L300">            return this.mesCommandes.get(i);</span>
+        }
+        
+<span class="nc" id="L303">        return null;</span>
+    }
+    
+    /**
+     * Ajoute une commande à la liste des commandes.
+     *
+     * @param c la commande à ajouter, représenté par une instance de la classe Commande.
+     */
+    public void addCommande(Commande c)
+    {
+<span class="fc bfc" id="L313" title="All 2 branches covered.">        if(this.getNbCommandes() == 0)</span>
+        {
+<span class="fc" id="L315">            this.mesCommandes.add(c);</span>
+        }
+        else
+        {
+<span class="fc" id="L319">            boolean bol = false;</span>
+<span class="fc" id="L320">            int i = 0;</span>
+<span class="pc bpc" id="L321" title="1 of 4 branches missed.">            while(i &lt; this.getNbCommandes() &amp;&amp; !bol)</span>
+            {
+<span class="fc" id="L323">                Commande exc = this.mesCommandes.get(i);</span>
+<span class="fc bfc" id="L324" title="All 2 branches covered.">                if(!exc.estConfirmee())</span>
+                {
+<span class="fc" id="L326">                    this.mesCommandes.get(i).ajoutAllproduits(c);</span>
+<span class="fc" id="L327">                    bol = true;</span>
+                }
+<span class="fc" id="L329">                i++;</span>
+<span class="fc" id="L330">            }</span>
+            
+<span class="fc bfc" id="L332" title="All 2 branches covered.">            if(!bol)</span>
+            {
+<span class="fc" id="L334">                this.mesCommandes.add(c);</span>
+            }
+        }
+<span class="fc" id="L337">    }</span>
+    
+    
+    public void removeCommande(Commande c)
+    {
+<span class="fc bfc" id="L342" title="All 2 branches covered.">        for(int i=0; i&lt;this.getNbCommandes(); i++)</span>
+        {
+<span class="pc bpc" id="L344" title="1 of 2 branches missed.">            if(this.mesCommandes.get(i).equals(c))</span>
+            {
+<span class="fc" id="L346">                this.mesCommandes.remove(this.mesCommandes.get(i));</span>
+            }
+        }
+<span class="fc" id="L349">    }</span>
+    
+    public void removeAllCommande()
+    {
+<span class="fc" id="L353">        this.mesCommandes.clear();</span>
+<span class="fc" id="L354">    }</span>
+    
+    /**
+    * Remplit le modèle fourni avec les informations de toutes les commandes en cours de l'utilisateur.
+    * 
+    * @param modelCommande un modèle de liste dans lequel les informations des commandes en cours 
+    *                         seront ajoutées. Chaque entrée représente une commande en cours.
+    */
+    public void listCommandeEncours(DefaultListModel&lt;String&gt; modelCommande)
+    {
+<span class="fc bfc" id="L364" title="All 2 branches covered.">        for(int i=0; i&lt;this.getNbCommandes(); i++)</span>
+        {
+<span class="fc" id="L366">            Commande r = this.mesCommandes.get(i);</span>
+<span class="pc bpc" id="L367" title="1 of 2 branches missed.">            if(!r.estConfirmee())</span>
+            {
+<span class="fc" id="L369">                modelCommande.addElement(&quot;Commande n°&quot;+(i+1)+&quot; -&gt; &quot;+r.toString());</span>
+            }
+        }
+<span class="fc" id="L372">    }</span>
+
+   /**
+    * Remplit le modèle fourni avec les informations de toutes les commandes validées par l'utilisateur.
+    * 
+    * @param modelCommande un modèle de liste dans lequel les informations des commandes validées 
+    *                         seront ajoutées. Chaque entrée représente une commande validée.
+    */
+    public void listCommandeValider(DefaultListModel&lt;String&gt; modelCommande)
+    {
+<span class="fc bfc" id="L382" title="All 2 branches covered.">        for(int i=0; i&lt;this.getNbCommandes(); i++)</span>
+        {
+<span class="fc" id="L384">            Commande r = this.mesCommandes.get(i);</span>
+<span class="pc bpc" id="L385" title="1 of 2 branches missed.">            if(r.estConfirmee())</span>
+            {
+<span class="fc" id="L387">                modelCommande.addElement(&quot;Commande n°&quot;+(i+1)+&quot; -&gt; &quot;+r.toString());</span>
+            }
+        }
+<span class="fc" id="L390">    }</span>
+    
+    
+  
+    /**
+     * Fournit une représentation sous forme de chaîne de caractères des informations 
+     * de l'utilisateur.
+     * 
+     * @return Une chaîne contenant les informations de l'utilisateur.
+     */
+    @Override
+    public String toString() {
+<span class="fc" id="L402">        return &quot;Utilisateur : &quot; + firstName + &quot; &quot; + lastName + &quot;, Mail : &quot; + mail;</span>
+    
+    }
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

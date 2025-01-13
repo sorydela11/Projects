@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProduitPhamacetique.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Animalerie</a> &gt; <a href="index.source.html" class="el_package">fr.ufrsciencestech.animalerie</a> &gt; <span class="el_source">ProduitPhamacetique.java</span></div><h1>ProduitPhamacetique.java</h1><pre class="source lang-java linenums">/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package fr.ufrsciencestech.animalerie;
+
+/**
+ * Classe représentant un produit pharmaceutique.
+ * Cette classe implémente l'interface Produit, fournissant des informations sur 
+ * le nom, la description, le prix, et le stock d'un produit pharmaceutique.
+ * 
+ * Elle est conçue pour gérer les produits spécifiques à la catégorie pharmaceutique.
+ */
+public class ProduitPhamacetique implements Produit {
+    /**
+     * Le nom du produit pharmaceutique.
+     */
+    private String nom;
+
+    /**
+     * Le prix du produit pharmaceutique (en euros).
+     */
+    private double prix;
+
+    /**
+     * La quantité en stock du produit pharmaceutique.
+     */
+    private int qte;
+    
+    
+
+    /**
+     * Constructeur permettant de créer un produit pharmaceutique avec son nom
+     * et son prix. Le stock est initialisé à une valeur par défaut à une valeur de 5.
+     * 
+     * @param n Le nom du produit pharmaceutique.
+     * @param prix Le prix du produit pharmaceutique (en euros).
+     */
+<span class="fc" id="L39">    public ProduitPhamacetique(String n, double prix, int qt) {</span>
+<span class="fc" id="L40">        this.nom = n;</span>
+<span class="fc" id="L41">        this.prix = prix * qt;</span>
+<span class="fc" id="L42">        this.qte = qt;</span>
+<span class="fc" id="L43">    }</span>
+
+    /**
+     * Récupère le nom de l'accessoire.
+     * 
+     * @return Le nom de l'accessoire.
+     */
+    @Override
+<span class="fc" id="L51">    public String getNom() { return this.nom; }</span>
+
+    
+
+    /**
+     * Récupère le prix de l'accessoire.
+     * 
+     * @return Le prix de l'accessoire (en euros).
+     */
+    @Override
+<span class="fc" id="L61">    public double getPrix() { return this.prix; }</span>
+
+    /**
+     * Récupère la quantité en stock de l'accessoire.
+     * 
+     * @return La quantité disponible en stock pour cet accessoire.
+     */
+    @Override
+<span class="fc" id="L69">    public int getQte() { return this.qte; }</span>
+
+    
+    
+    /**
+     * Fournit une représentation sous forme de chaîne de caractères des informations 
+     * concernant le produit (nom, description, prix, stock).
+     * 
+     * @return Une chaîne contenant les détails du produit.
+     */
+
+    /**
+     * Fournit une représentation sous forme de chaîne de caractères des informations 
+     * concernant le produit pharmaceutique, incluant son nom
+     * son prix, et sa quantité en stock.
+     * 
+     * @return Une chaîne contenant les détails du produit pharmaceutique.
+     */
+    @Override
+    public String toString() {
+<span class="fc" id="L89">        return &quot;Médicamment ---&gt; Nom : &quot;+this.nom+&quot; | Prix : &quot;+this.prix+&quot;€ | Quantité choisie :&quot; +</span>
+                this.qte;
+    }
+
+    @Override
+    public void setPrix(double new_price) {
+<span class="fc" id="L95">        this.prix = new_price;</span>
+<span class="fc" id="L96">    }</span>
+
+    @Override
+    public void setQte(int nqte) {
+<span class="fc" id="L100">        this.qte = nqte;</span>
+<span class="fc" id="L101">    }</span>
+
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

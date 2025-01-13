@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Promenade.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Animalerie</a> &gt; <a href="index.source.html" class="el_package">fr.ufrsciencestech.animalerie</a> &gt; <span class="el_source">Promenade.java</span></div><h1>Promenade.java</h1><pre class="source lang-java linenums">/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package fr.ufrsciencestech.animalerie;
+
+/**
+ * Classe représentant un service de promenade. 
+ * Ce service inclut une description, un prix et une durée. 
+ * Il implémente l'interface Service pour garantir la compatibilité avec d'autres services.
+ * 
+ * @author delaton
+ */
+public class Promenade implements Service {
+    
+    /**
+     * Le prix du service de promenade (en euros).
+     */
+    private double prix;
+    
+    /**
+     * La durée de la promenade (par exemple, &quot;30 minutes&quot;, &quot;1 heure&quot;).
+     */
+    private String duree;
+    
+    /**
+     * Constructeur par défaut permettant de créer une promenade avec comme prix a 10 euro , 
+     * d'une durée de 30 minutes 
+     */
+<span class="fc" id="L30">    public Promenade() {</span>
+<span class="fc" id="L31">        this.prix = 10.0; // Prix par défaut en euros</span>
+<span class="fc" id="L32">        this.duree = &quot;30 minutes&quot;; // Durée par défaut</span>
+<span class="fc" id="L33">    }</span>
+    
+    /**
+     * Constructeur permettant de créer une promenade en définissant son prix et sa durée.
+     * 
+     * @param prix Le prix de la promenade (en euros).
+     * @param duree La durée de la promenade.
+     */
+<span class="fc" id="L41">    public Promenade(double prix, String duree) {</span>
+<span class="fc" id="L42">        this.prix = prix;       // Initialisation du prix</span>
+<span class="fc" id="L43">        this.duree = duree;     // Initialisation de la durée</span>
+<span class="fc" id="L44">    }</span>
+    
+
+    /**
+     * Récupère le prix de la promenade.
+     * 
+     * @return Le prix de la promenade (en euros).
+     */
+    @Override
+    public double getPrix() {
+<span class="fc" id="L54">        return this.prix;</span>
+    }
+    
+    /**
+     * Récupère la durée de la promenade.
+     * 
+     * @return La durée de la promenade.
+     */
+    public String getDuree() {
+<span class="fc" id="L63">        return  this.duree;</span>
+    }
+    
+    
+    /**
+     * Modifie le prix de la promenade.
+     * 
+     * @param p Le nouveau prix (en euros).
+     */
+    public void setPrix(double p) {
+<span class="fc" id="L73">        this.prix= p ;</span>
+<span class="fc" id="L74">    }</span>
+    
+    /**
+     * Modifie la durée de la promenade.
+     * 
+     * @param chaine La nouvelle durée de la promenade.
+     */
+    public void setDuree(String chaine) {
+<span class="fc" id="L82">        this.duree = chaine ;</span>
+<span class="fc" id="L83">    }</span>
+    
+    /**
+     * Fournit une représentation sous forme de chaîne de caractères du service de promenade.
+     * 
+     * @return Une chaîne contenant les détails de la promenade (description, prix, durée).
+     */
+    @Override
+    public String toString() {
+<span class="fc" id="L92">        return &quot;Promenade  ---&gt; Durée : &quot;+this.duree+&quot; | Prix : &quot;+this.getPrix()+&quot;€&quot;;</span>
+    }
+
+    @Override
+    public String getDescr() {
+<span class="fc" id="L97">        return null;</span>
+    }
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

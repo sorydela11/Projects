@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Toilettage.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Animalerie</a> &gt; <a href="index.source.html" class="el_package">fr.ufrsciencestech.animalerie</a> &gt; <span class="el_source">Toilettage.java</span></div><h1>Toilettage.java</h1><pre class="source lang-java linenums">/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package fr.ufrsciencestech.animalerie;
+
+/**
+ * Classe représentant un service de toilettage. 
+ * Cette classe implémente l'interface Service et fournit un type et un prix pour le service.
+ * 
+ * @author delaton
+ */
+public class Toilettage implements Service {
+
+    /**
+     * Le type  de toilettage.
+     */
+<span class="fc" id="L18">    public enum TypeDeToilettage{</span>
+<span class="fc" id="L19">        TOILETTAGE_DE_BASE,  // &quot;Toilettage professionnel comprenant coupe, bain, soin des ongles, rasage des coussinets pour un animal propre et soigné.&quot;</span>
+<span class="fc" id="L20">        DOUCHE,   // &quot;bain prfessionel&quot;</span>
+<span class="fc" id="L21">        COUPE_ET_SOINS_DES_ONGLES, // &quot;coupe professionel&quot; </span>
+<span class="fc" id="L22">        RASAGE_DES_COUSSINET_DE_PATTES,//</span>
+<span class="fc" id="L23">        TONNAGE_COMPLET</span>
+    }
+
+  
+    
+    private TypeDeToilettage type ;
+
+
+    /**
+     * Le prix du service de toilettage (en euros).
+     */
+    private double prix;
+    
+    /**
+     * Constructeur par défaut permettant de créer un service de toilettage complet 
+     * dont le prix est de 100 euro pour la totale.
+     */
+<span class="fc" id="L40">    public Toilettage() {</span>
+<span class="fc" id="L41">        this.type = TypeDeToilettage.TOILETTAGE_DE_BASE;//&quot;Toilettage professionnel comprenant coupe, bain, soin des ongles, rasage des coussinets pour un animal propre et soigné.&quot;</span>
+<span class="fc" id="L42">        this.prix = 100; // Prix par défaut en euros</span>
+<span class="fc" id="L43">    }</span>
+    
+    /**
+     * Constructeur permettant de créer un service de toilettage avec un prix initial.
+     * 
+     * @param type pour le type de toilettage choisis
+     * @param prix Le prix du service (en euros).
+     */
+<span class="nc" id="L51">    public Toilettage(double prix, TypeDeToilettage type) {</span>
+<span class="nc" id="L52">        this.type = type;</span>
+<span class="nc" id="L53">        this.prix = prix;</span>
+<span class="nc" id="L54">    }</span>
+    
+    /**
+     * Récupère le type du service de toilettage.
+     * 
+     * @return le type du service de toilettage.
+     */
+    @Override
+    public String getDescr() {
+<span class="fc" id="L63">        return this.type.name();</span>
+    }
+
+     /**
+     * Récupère le prix du service de toilettage.
+     * 
+     * @return Le prix du service (en euros).
+     */
+    @Override
+    public double getPrix() {
+<span class="fc" id="L73">        return this.prix;</span>
+    }
+    
+    /**
+     * Modifie le type du service de toilettage.
+     * 
+     * @param type.
+     */
+    public void setDescr(TypeDeToilettage type) {
+<span class="fc" id="L82">        this.type = type;  // Modification du type de toilettage</span>
+<span class="fc" id="L83">    }</span>
+    
+    /**
+     * Modifie le prix du service de toilettage.
+     * 
+     * @param p Le nouveau prix (en euros).
+     */
+    public void setPrix(double p) {
+<span class="fc" id="L91">        this.prix = p;  // Modification du prix</span>
+<span class="fc" id="L92">    }</span>
+
+    
+    /**
+     * Fournit une représentation sous forme de chaîne de caractères du service de toilettage.
+     * 
+     * @return Une chaîne décrivant le service (description et prix).
+     */
+    @Override
+    public String toString() {
+<span class="fc" id="L102">        return &quot;Toilettage  ---&gt; &quot;+this.type+&quot; | Prix : &quot;+this.getPrix()+&quot;€&quot;;</span>
+    }
+
+    @Override
+    public String getDuree() {
+<span class="fc" id="L107">        return null;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

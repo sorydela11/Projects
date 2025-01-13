@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ControleurMenu.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Animalerie</a> &gt; <a href="index.source.html" class="el_package">fr.ufrsciencestech.animalerie.controleur</a> &gt; <span class="el_source">ControleurMenu.java</span></div><h1>ControleurMenu.java</h1><pre class="source lang-java linenums">/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package fr.ufrsciencestech.animalerie.controleur;
+
+import fr.ufrsciencestech.animalerie.*;
+import fr.ufrsciencestech.animalerie.Commande.StatutCommande;
+import fr.ufrsciencestech.animalerie.Reservation.StatutReservation;
+import fr.ufrsciencestech.animalerie.bd.BaseDeDonnee;
+import fr.ufrsciencestech.animalerie.view.*;
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.sql.SQLException;
+import javax.swing.DefaultListModel;
+
+/**
+ *
+ * @author delaton
+ */
+public class ControleurMenu extends Controleur{
+    
+    public ControleurMenu(User user, View m)
+    {
+<span class="fc" id="L25">        super(user, m);</span>
+<span class="fc" id="L26">    }</span>
+    
+    public void setViewMenu(View v)
+    {
+<span class="nc" id="L30">        super.menU = v;</span>
+<span class="nc" id="L31">    }</span>
+    
+    
+
+    @Override
+    public void actionPerformed(ActionEvent ae) {
+<span class="fc bfc" id="L37" title="All 2 branches covered.">        if (((Component) ae.getSource()).getName().equals(&quot;Service&quot;)) {</span>
+<span class="fc" id="L38">            ReservationView reservationView = new ReservationView();</span>
+<span class="fc" id="L39">            ControleurReservation controleurReservation = new ControleurReservation(user, menU);</span>
+            //controleurReservation.setVueG(menU);
+<span class="fc" id="L41">            controleurReservation.setRsView(reservationView);</span>
+<span class="fc" id="L42">            reservationView.ajoutControleur(controleurReservation);</span>
+<span class="fc" id="L43">            reservationView.setVisible(true);</span>
+<span class="fc" id="L44">        }</span>
+        
+<span class="fc bfc" id="L46" title="All 2 branches covered.">        else if (((Component) ae.getSource()).getName().equals(&quot;Produits&quot;)) {</span>
+            // Créer et configurer le contrôleur pour les produits
+<span class="fc" id="L48">            ProduitView produitView = new ProduitView();</span>
+<span class="fc" id="L49">            ControleurProduit controleurProduit = new ControleurProduit(user, menU);</span>
+            //controleurProduit.setVueG(menU);
+<span class="fc" id="L51">            controleurProduit.setProduitView(produitView);</span>
+<span class="fc" id="L52">            produitView.ajoutControleur(controleurProduit);</span>
+<span class="fc" id="L53">            produitView.setVisible(true);</span>
+<span class="fc" id="L54">        }</span>
+        
+<span class="fc bfc" id="L56" title="All 2 branches covered.">        else if (((Component) ae.getSource()).getName().equals(&quot;Animal&quot;)){</span>
+<span class="fc" id="L57">            AjoutAnimalView ajoutAn = new AjoutAnimalView();</span>
+<span class="fc" id="L58">            ControleurAnimal cn = new ControleurAnimal(user, menU);</span>
+            //cn.setVueG(menU);
+<span class="fc" id="L60">            cn.setAnView(ajoutAn);</span>
+<span class="fc" id="L61">            ajoutAn.ajoutControleur(cn);</span>
+<span class="fc" id="L62">            ajoutAn.setVisible(true);</span>
+<span class="fc" id="L63">        }</span>
+        
+<span class="pc bpc" id="L65" title="1 of 2 branches missed.">        else if (((Component) ae.getSource()).getName().equals(&quot;Quit&quot;))</span>
+        {
+<span class="fc" id="L67">            this.menU.dispose();</span>
+            try {
+<span class="fc" id="L69">                BaseDeDonnee.c.close();</span>
+<span class="nc" id="L70">            } catch (SQLException ex) {</span>
+<span class="nc" id="L71">                ex.printStackTrace();</span>
+<span class="pc" id="L72">            }</span>
+        }
+        
+<span class="nc bnc" id="L75" title="All 2 branches missed.">        else if (((Component) ae.getSource()).getName().equals(&quot;AnnulerCommande&quot;)){</span>
+<span class="nc" id="L76">            int id_client = BaseDeDonnee.getId_client(user.getMail());</span>
+<span class="nc bnc" id="L77" title="All 2 branches missed.">            for(int i=0; i&lt;this.user.getNbCommandes(); i++)</span>
+            {
+<span class="nc" id="L79">                Commande c = this.user.getCommande(i);</span>
+<span class="nc bnc" id="L80" title="All 2 branches missed.">                if(c.getStatut() == StatutCommande.EN_ATTENTE)</span>
+                {
+<span class="nc" id="L82">                    this.maj_stock_bd(c);</span>
+<span class="nc" id="L83">                    int id_comm = BaseDeDonnee.getId_Commande(id_client, c.getStatut().name());</span>
+<span class="nc bnc" id="L84" title="All 4 branches missed.">                    if(id_comm != -1 &amp;&amp; BaseDeDonnee.updateStatutCommande(0, id_comm))</span>
+                    {
+<span class="nc" id="L86">                        System.out.println(&quot;Commande &quot;+id_comm+&quot; supprimer de la base de donnee&quot;);</span>
+<span class="nc" id="L87">                        this.user.removeCommande(c);</span>
+                    } 
+                    else
+                    {
+<span class="nc" id="L91">                        System.out.println(&quot;Impossible de supprimer la commande &quot;+id_comm+&quot; de la base de donnee&quot;);</span>
+                    }
+                }
+                
+            }
+            
+            //réaffichage
+<span class="nc" id="L98">            DefaultListModel&lt;String&gt; model = new DefaultListModel&lt;&gt;();</span>
+<span class="nc" id="L99">            user.listCommandeEncours(model);</span>
+<span class="nc" id="L100">            menU.getListCommande().setModel(model);</span>
+
+<span class="nc" id="L102">            model = new DefaultListModel&lt;&gt;();</span>
+<span class="nc" id="L103">            user.listCommandeValider(model);</span>
+<span class="nc" id="L104">            user.listReservationValider(model);</span>
+<span class="nc" id="L105">            menU.getListHistorique().setModel(model);</span>
+            
+<span class="nc" id="L107">        }</span>
+        
+<span class="nc bnc" id="L109" title="All 2 branches missed.">        else if (((Component) ae.getSource()).getName().equals(&quot;AnnulerReserv&quot;)){</span>
+<span class="nc" id="L110">            int id_client = BaseDeDonnee.getId_client(user.getMail());</span>
+<span class="nc bnc" id="L111" title="All 2 branches missed.">            for(int i=0; i&lt;this.user.getNbReservations(); i++)</span>
+            {
+<span class="nc" id="L113">                Reservation r = this.user.getReservation(i);</span>
+<span class="nc bnc" id="L114" title="All 2 branches missed.">                if(r.getStatut() == StatutReservation.EN_ATTENTE)</span>
+                {
+<span class="nc" id="L116">                    int id_res = BaseDeDonnee.getId_reservation(r.getDate(), r.getStatut(), id_client);</span>
+<span class="nc bnc" id="L117" title="All 4 branches missed.">                    if(id_res != -1 &amp;&amp; BaseDeDonnee.updateStatutReservation(0, id_res))</span>
+                    {
+<span class="nc" id="L119">                        System.out.println(&quot;Reservation &quot;+id_res+&quot; supprimer de la base de donnee&quot;);</span>
+<span class="nc" id="L120">                        this.user.removeReservation(r);</span>
+                    } 
+                    else
+                    {
+<span class="nc" id="L124">                        System.out.println(&quot;Impossible de supprimer la reservation &quot;+id_res+&quot; de la base de donnee&quot;);</span>
+                    }
+                }
+            }
+            
+<span class="nc" id="L129">            DefaultListModel&lt;String&gt; model = new DefaultListModel&lt;&gt;();</span>
+<span class="nc" id="L130">            user.listReservationEncours(model);</span>
+<span class="nc" id="L131">            menU.getListReservation().setModel(model);</span>
+
+<span class="nc" id="L133">            model = new DefaultListModel&lt;&gt;();</span>
+<span class="nc" id="L134">            user.listCommandeValider(model);</span>
+<span class="nc" id="L135">            user.listReservationValider(model);</span>
+<span class="nc" id="L136">            menU.getListHistorique().setModel(model);</span>
+<span class="nc" id="L137">        }</span>
+        
+<span class="nc bnc" id="L139" title="All 2 branches missed.">        else if (((Component) ae.getSource()).getName().equals(&quot;ConfirmReserv&quot;)){</span>
+<span class="nc" id="L140">            int id_client = BaseDeDonnee.getId_client(user.getMail());</span>
+<span class="nc bnc" id="L141" title="All 2 branches missed.">            for(int i=0; i&lt;this.user.getNbReservations(); i++)</span>
+            {
+<span class="nc" id="L143">                Reservation r = this.user.getReservation(i);</span>
+<span class="nc bnc" id="L144" title="All 2 branches missed.">                if(r.getStatut() == StatutReservation.EN_ATTENTE)</span>
+                {
+<span class="nc" id="L146">                    int id_res = BaseDeDonnee.getId_reservation(r.getDate(), r.getStatut(), id_client);</span>
+<span class="nc bnc" id="L147" title="All 4 branches missed.">                    if(id_res != -1 &amp;&amp; BaseDeDonnee.updateStatutReservation(1, id_res))</span>
+                    {
+<span class="nc" id="L149">                        System.out.println(&quot;Statut reservation -&gt; &quot;+id_res+&quot; passer à confirmé&quot;);</span>
+<span class="nc" id="L150">                        r.confirmerReservation();</span>
+                    } 
+                    else
+                    {
+<span class="nc" id="L154">                        System.out.println(&quot;Impossible de changer le statut de la reservation &quot;+id_res+&quot; de la base de donnee&quot;);</span>
+                    }
+                }
+            }
+            
+<span class="nc" id="L159">            DefaultListModel&lt;String&gt; model = new DefaultListModel&lt;&gt;();</span>
+<span class="nc" id="L160">            user.listReservationEncours(model);</span>
+<span class="nc" id="L161">            menU.getListReservation().setModel(model);</span>
+
+<span class="nc" id="L163">            model = new DefaultListModel&lt;&gt;();</span>
+<span class="nc" id="L164">            user.listCommandeValider(model);</span>
+<span class="nc" id="L165">            user.listReservationValider(model);</span>
+<span class="nc" id="L166">            menU.getListHistorique().setModel(model);</span>
+
+<span class="nc" id="L168">        }</span>
+        
+<span class="nc bnc" id="L170" title="All 2 branches missed.">        else if (((Component) ae.getSource()).getName().equals(&quot;ConfirmCommand&quot;)){</span>
+<span class="nc" id="L171">            int id_client = BaseDeDonnee.getId_client(user.getMail());</span>
+<span class="nc bnc" id="L172" title="All 2 branches missed.">            for(int i=0; i&lt;this.user.getNbCommandes(); i++)</span>
+            {
+<span class="nc" id="L174">                Commande c = this.user.getCommande(i);</span>
+<span class="nc bnc" id="L175" title="All 2 branches missed.">                if(c.getStatut() == StatutCommande.EN_ATTENTE)</span>
+                {
+<span class="nc" id="L177">                    int id_comm = BaseDeDonnee.getId_Commande(id_client, c.getStatut().name());</span>
+<span class="nc bnc" id="L178" title="All 4 branches missed.">                    if(id_comm != -1 &amp;&amp; BaseDeDonnee.updateStatutCommande(1, id_comm))</span>
+                    {
+<span class="nc" id="L180">                        System.out.println(&quot;Commande &quot;+id_comm+&quot; est passe a confirme dans la base de donnee&quot;);</span>
+<span class="nc" id="L181">                        c.passerCommande();</span>
+                    } 
+                    else
+                    {
+<span class="nc" id="L185">                        System.out.println(&quot;Impossible de changer le statut de la commande &quot;+id_comm+&quot; de la base de donnee&quot;);</span>
+                    }
+                }   
+            }
+            
+<span class="nc" id="L190">            DefaultListModel&lt;String&gt; model = new DefaultListModel&lt;&gt;();</span>
+<span class="nc" id="L191">            user.listCommandeEncours(model);</span>
+<span class="nc" id="L192">            menU.getListCommande().setModel(model);</span>
+
+<span class="nc" id="L194">            model = new DefaultListModel&lt;&gt;();</span>
+<span class="nc" id="L195">            user.listCommandeValider(model);</span>
+<span class="nc" id="L196">            user.listReservationValider(model);</span>
+<span class="nc" id="L197">            menU.getListHistorique().setModel(model);</span>
+        }
+        
+<span class="fc" id="L200">    }</span>
+    
+    
+    public void maj_stock_bd(Commande c)
+    {
+<span class="nc bnc" id="L205" title="All 2 branches missed.">        for(int i=0; i&lt;c.getNbProduitsCommander(); i++)</span>
+        {
+<span class="nc" id="L207">            Produit p = c.getProduit(i);</span>
+<span class="nc bnc" id="L208" title="All 2 branches missed.">            if(BaseDeDonnee.updateProduitStock(0, p.getNom(), p.getQte()))</span>
+            {
+<span class="nc" id="L210">                System.out.println(&quot;Augmentation du stock produit &quot;+p.getNom()+&quot; dans la bd car commande annuler&quot;);</span>
+            }
+            else
+            {
+<span class="nc" id="L214">                System.out.println(&quot;Echec Augmentation du stock produit &quot;+p.getNom()+&quot; dans la bd car commande annuler&quot;);</span>
+            }
+        }
+<span class="nc" id="L217">    }</span>
+    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

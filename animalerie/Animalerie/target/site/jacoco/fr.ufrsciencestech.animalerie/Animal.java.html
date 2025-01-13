@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Animal.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Animalerie</a> &gt; <a href="index.source.html" class="el_package">fr.ufrsciencestech.animalerie</a> &gt; <span class="el_source">Animal.java</span></div><h1>Animal.java</h1><pre class="source lang-java linenums">/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package fr.ufrsciencestech.animalerie;
+
+/**
+ * Classe représentant un animal avec des caractéristiques principales telles que 
+ * le nom, le poids, l'âge, et l'espèce. Elle fournit des méthodes pour gérer 
+ * ces informations.
+ * 
+ * @author delaton
+ */
+public class Animal {
+
+    /**
+     * Le nom de l'animal.
+     */
+    private String name;
+
+    /**
+     * Le poids de l'animal (en kilogrammes).
+     */
+    private double poids;
+
+    /**
+     * L'âge de l'animal (en années).
+     */
+    private int age;
+
+    /**
+     * L'espèce de l'animal (par exemple, &quot;Chien&quot;, &quot;Chat&quot;).
+     */
+    private String espece;
+
+    /**
+     * Constructeur permettant de créer un animal avec un nom, un poids et un âge.
+     * 
+     * @param name Le nom de l'animal.
+     * @param p Le poids de l'animal (en kilogrammes).
+     * @param age L'âge de l'animal (en années).
+     * @param espece L'espèce de l'animal.
+     */
+<span class="fc" id="L44">    public Animal(String name, double p, int age, String espece) {</span>
+<span class="fc" id="L45">        this.name = name;</span>
+<span class="fc" id="L46">        this.poids = p;</span>
+<span class="fc" id="L47">        this.age = age;</span>
+<span class="fc" id="L48">        this.espece = espece;</span>
+    
+<span class="fc" id="L50">    }</span>
+
+    /**
+     * Modifie le nom de l'animal.
+     * 
+     * @param chaine Le nouveau nom de l'animal.
+     */
+    public void setName(String chaine) {
+<span class="fc" id="L58">        this.name = chaine;</span>
+<span class="fc" id="L59">     }</span>
+
+    /**
+     * Récupère le nom de l'animal.
+     * 
+     * @return Le nom de l'animal.
+     */
+    public String getName() { 
+<span class="fc" id="L67">        return this.name;</span>
+    }
+
+    /**
+     * Modifie l'âge de l'animal.
+     * 
+     * @param numb Le nouvel âge de l'animal (en années).
+     */
+    public void setAge(int numb) { 
+<span class="fc" id="L76">        this.age = numb;</span>
+<span class="fc" id="L77">    }</span>
+
+    /**
+     * Récupère l'âge de l'animal.
+     * 
+     * @return L'âge de l'animal (en années).
+     */
+    public int getAge() {
+<span class="fc" id="L85">        return this.age; </span>
+    }
+
+    /**
+     * Modifie le poids de l'animal.
+     * 
+     * @param p Le nouveau poids de l'animal (en kilogrammes).
+     */
+    public void setPoids(double p) {
+<span class="fc" id="L94">        this.poids = p;</span>
+<span class="fc" id="L95">     }</span>
+
+    /**
+     * Récupère le poids de l'animal.
+     * 
+     * @return Le poids de l'animal (en kilogrammes).
+     */
+    public double getPoids() { 
+<span class="fc" id="L103">        return this.poids; </span>
+    }
+
+    /**
+     * Modifie l'espèce de l'animal.
+     * 
+     * @param chaine La nouvelle espèce de l'animal (par exemple, &quot;Chien&quot;).
+     */
+    public void setEspece(String chaine) { 
+<span class="fc" id="L112">        this.espece = chaine ;</span>
+    
+<span class="fc" id="L114">    }</span>
+
+    /**
+     * Récupère l'espèce de l'animal.
+     * 
+     * @return L'espèce de l'animal (par exemple, &quot;Chien&quot;).
+     */
+    public String getEspece() { 
+<span class="fc" id="L122">        return this.espece; </span>
+    }
+
+    /**
+     * Fournit une représentation sous forme de chaîne de caractères des informations 
+     * concernant l'animal (nom, poids, âge, espèce).
+     * 
+     * @return Une chaîne contenant les détails de l'animal.
+     */
+    @Override
+    public String toString() { 
+<span class="fc" id="L133">        return &quot;Nom: &quot; + this.name + &quot;, Espèce: &quot; + this.espece + &quot;, Poids: &quot; + this.poids + &quot; kg, Âge: &quot; + this.age + &quot; ans&quot;; </span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>
